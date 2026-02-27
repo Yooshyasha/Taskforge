@@ -1,1 +1,1 @@
-include(":shared")
+include(":shared", ":ai-service")
