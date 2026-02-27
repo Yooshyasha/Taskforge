@@ -51,9 +51,6 @@ dependencies {
     implementation("ai.koog:koog-agents:$koogVersion")
     implementation("ai.koog:koog-spring-boot-starter:$koogVersion")
 
-    // https://mvnrepository.com/artifact/org.mockito.kotlin/mockito-kotlin
-    testImplementation("org.mockito.kotlin:mockito-kotlin:6.0.0")
-
     implementation(kotlin("stdlib"))
 
     implementation(project(":shared"))
@@ -63,12 +60,6 @@ kotlin {
     compilerOptions {
         freeCompilerArgs.addAll("-Xjsr305=strict")
     }
-}
-
-allOpen {
-    annotation("jakarta.persistence.Entity")
-    annotation("jakarta.persistence.MappedSuperclass")
-    annotation("jakarta.persistence.Embeddable")
 }
 
 tasks.withType<Test> {
