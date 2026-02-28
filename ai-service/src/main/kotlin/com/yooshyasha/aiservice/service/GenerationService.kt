@@ -11,18 +11,18 @@ import java.util.*
 @Service
 class GenerationService(
     private val aiTaskGenerationService: AITaskGenerationService,
-    private val taskStorageService: TaskStorageService,
+    private val futureStorageService: FutureStorageService,
 ) {
     fun generate(text: String): ResponsePostGenerate {
         val taskId = UUID.randomUUID()
         val task = aiTaskGenerationService.generation(text)
-        taskStorageService.save(taskId, task)
+        futureStorageService.save(taskId, task)
 
         return ResponsePostGenerate(taskId)
     }
 
     suspend fun getTask(taskId: UUID): ResponseGetTaskStatus {
-        val task: Deferred<GeneratedTasksResponse> = taskStorageService.getTask(taskId)
+        val task: Deferred<GeneratedTasksResponse> = futureStorageService.getTask(taskId)
         val response: GeneratedTasksResponse?
         try {
             response = aiTaskGenerationService.getTaskResult(task)

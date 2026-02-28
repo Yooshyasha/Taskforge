@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class TaskStorageService {
+class FutureStorageService {
     private val taskMap: ConcurrentMap<UUID, Deferred<GeneratedTasksResponse>> = ConcurrentMap()
 
     fun save(taskId: UUID, data: Deferred<GeneratedTasksResponse>) {
