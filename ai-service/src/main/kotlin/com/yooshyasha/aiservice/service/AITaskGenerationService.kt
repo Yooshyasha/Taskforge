@@ -25,10 +25,8 @@ class AITaskGenerationService(
     }
 
     suspend fun getTaskResult(task: Deferred<GeneratedTasksResponse>): GeneratedTasksResponse? {
-        return if (task.isActive) {
-            null
-        } else {
+        return if (task.isCompleted) {
             task.await()
-        }
+        } else null
     }
 }
