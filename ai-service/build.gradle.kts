@@ -56,6 +56,8 @@ dependencies {
     implementation(kotlin("stdlib"))
 
     implementation(project(":shared"))
+
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
 }
 
 kotlin {

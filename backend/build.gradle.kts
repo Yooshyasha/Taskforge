@@ -28,9 +28,13 @@ dependencies {
     implementation("tools.jackson.module:jackson-module-kotlin:3.1.0")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation(project(":shared"))
 
     implementation("io.ktor:ktor-client-okhttp-jvm:$ktorVersion")
+
+    // Source: https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
 }
 
 
