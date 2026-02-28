@@ -1,11 +1,10 @@
 package com.yooshyasha.aiservice.config
 
-import ai.koog.prompt.executor.clients.anthropic.AnthropicModels
 import ai.koog.prompt.executor.clients.openai.OpenAILLMClient
 import ai.koog.prompt.executor.clients.openai.OpenAIModels
 import ai.koog.prompt.executor.llms.SingleLLMPromptExecutor
-import ai.koog.prompt.executor.ollama.client.OllamaClient
 import ai.koog.prompt.llm.LLModel
+import io.ktor.client.*
 import org.springframework.beans.factory.BeanCreationException
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
@@ -16,23 +15,29 @@ import org.springframework.core.io.ResourceLoader
 @Configuration
 class AIAgentConfig(
     @param:Qualifier("openAIExecutor") private val openaiAIExecutor: SingleLLMPromptExecutor?,
-    @param:Qualifier("anthropicExecutor") private val anthropicAIExecutor: SingleLLMPromptExecutor?,
-    @param:Qualifier("googleExecutor") private val googleAIExecutor: SingleLLMPromptExecutor?,
-    @param:Qualifier("ollamaExecutor") private val ollamaAIExecutor: SingleLLMPromptExecutor?,
-    @param:Qualifier("openRouterExecutor") private val openRouterAIExecutor: SingleLLMPromptExecutor?,
-    @param:Qualifier("deepSeekExecutor") private val deepSeekAIExecutor: SingleLLMPromptExecutor?,
+    @param:Value($$"${ai.koog.openai.api-key}") private val openaiApiKey: String,
+//    @param:Qualifier("anthropicExecutor") private val anthropicAIExecutor: SingleLLMPromptExecutor?,
+//    @param:Qualifier("googleExecutor") private val googleAIExecutor: SingleLLMPromptExecutor?,
+//    @param:Qualifier("ollamaExecutor") private val ollamaAIExecutor: SingleLLMPromptExecutor?,
+//    @param:Qualifier("openRouterExecutor") private val openRouterAIExecutor: SingleLLMPromptExecutor?,
+//    @param:Qualifier("deepSeekExecutor") private val deepSeekAIExecutor: SingleLLMPromptExecutor?,
     @param:Value($$"${ai.model.id}") private val aiModelId: String,
     private val resourceLoader: ResourceLoader,
 ) {
     @Bean
     fun aiExecutor(): SingleLLMPromptExecutor {
         return when {
-            openaiAIExecutor != null -> openaiAIExecutor
-            anthropicAIExecutor != null -> anthropicAIExecutor
-            googleAIExecutor != null -> googleAIExecutor
-            ollamaAIExecutor != null -> ollamaAIExecutor
-            openRouterAIExecutor != null -> openRouterAIExecutor
-            deepSeekAIExecutor != null -> deepSeekAIExecutor
+            openaiAIExecutor != null -> SingleLLMPromptExecutor(
+                OpenAILLMClient(
+                    apiKey = openaiApiKey,
+                    baseClient = HttpClient(),
+                )
+            )
+//            anthropicAIExecutor != null -> anthropicAIExecutor
+//            googleAIExecutor != null -> googleAIExecutor
+//            ollamaAIExecutor != null -> ollamaAIExecutor
+//            openRouterAIExecutor != null -> openRouterAIExecutor
+//            deepSeekAIExecutor != null -> deepSeekAIExecutor
             else -> throw BeanCreationException("Zero available executors")
         }
     }
@@ -55,7 +60,7 @@ class AIAgentConfig(
 //            capabilities = listOf(LLMCapability.Temperature, LLMCapability.Completion),
 //            contextLength = 32_000,
 //        )
-        return AnthropicModels.Sonnet_4_5
+        return OpenAIModels.Chat.GPT4_1
     }
 
     @Bean
