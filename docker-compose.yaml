@@ -9,6 +9,12 @@ services:
       - .env
     networks:
       - app
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
   backend:
     build:
       dockerfile: backend/Dockerfile
@@ -20,3 +26,12 @@ services:
       - app
     ports:
       - "8080:8080"
+    depends_on:
+      ai-service:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
