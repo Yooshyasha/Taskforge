@@ -20,7 +20,7 @@ class AIAgentConfig(
     @Qualifier("ollamaExecutor") private val ollamaAIExecutor: SingleLLMPromptExecutor?,
     @Qualifier("openRouterExecutor") private val openRouterAIExecutor: SingleLLMPromptExecutor?,
     @Qualifier("deepSeekExecutor") private val deepSeekAIExecutor: SingleLLMPromptExecutor?,
-    @Value("ai.model.id") private val aiModelId: String,
+    @Value("\${ai.model.id}") private val aiModelId: String,
     private val resourceLoader: ResourceLoader,
 ) {
     @Bean
