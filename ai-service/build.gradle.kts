@@ -22,6 +22,7 @@ repositories {
 }
 
 val koogVersion = "0.4.1"
+val ktorVersion = "3.0.3"
 
 configurations.all {
     resolutionStrategy.eachDependency {
@@ -50,6 +51,7 @@ dependencies {
 
     implementation("ai.koog:koog-agents:$koogVersion")
     implementation("ai.koog:koog-spring-boot-starter:$koogVersion")
+    implementation("io.ktor:ktor-client-okhttp-jvm:$ktorVersion")
 
     implementation(kotlin("stdlib"))
 
