@@ -18,8 +18,6 @@ services:
   backend:
     build:
       dockerfile: backend/Dockerfile
-    environment:
-      - spring.cloud.openfeign.client.config.aiServiceClient.url=http://ai-service:8080
     env_file:
       - .env
     networks:

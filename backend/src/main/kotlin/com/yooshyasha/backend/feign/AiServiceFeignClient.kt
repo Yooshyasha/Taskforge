@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import java.util.*
 
-@FeignClient(name = "aiServiceClient", url = "http://localhost:8080")
+@FeignClient(name = "aiServiceClient", url = "http://ai-service:8080")
 interface AiServiceFeignClient {
     @PostMapping("/v1/api/generation")
     fun generate(@RequestBody request: GenerateRequest): ResponsePostGenerate
