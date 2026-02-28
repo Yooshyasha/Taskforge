@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>task-gen</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+    <header>
+        <span class="logo">task-gen</span>
+        <span class="version">v0.1.0</span>
+    </header>
+
+    <section id="generate-section">
+        <div class="label">project description</div>
+        <textarea id="input-text" placeholder="describe your project..." rows="6"></textarea>
+        <div class="row">
+            <button id="btn-generate" onclick="generate()">[ generate ]</button>
+        </div>
+    </section>
+
+    <section id="status-section" class="hidden">
+        <div class="spinner-row">
+            <span class="spinner"></span>
+            <span id="status-text">waiting for generation...</span>
+        </div>
+    </section>
+
+    <section id="error-section" class="hidden">
+        <div class="error-box" id="error-msg"></div>
+        <button onclick="reset()">[ back ]</button>
+    </section>
+
+    <section id="tasks-section" class="hidden">
+        <div class="tasks-header">
+            <span id="project-name"></span>
+            <button id="btn-confirm" onclick="confirm()">[ confirm ]</button>
+        </div>
+        <div id="tasks-list"></div>
+    </section>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
