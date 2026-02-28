@@ -23,4 +23,12 @@ class AITaskGenerationService(
             return@async taskManagerAgentProvider.provideAgent().run(text)
         }
     }
+
+    suspend fun getTaskResult(task: Deferred<GeneratedTasksResponse>): GeneratedTasksResponse? {
+        return if (task.isActive) {
+            null
+        } else {
+            task.await()
+        }
+    }
 }
