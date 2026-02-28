@@ -1,6 +1,6 @@
 package com.yooshyasha.backend.exceptions
 
-import com.yooshyasha.aiservice.dto.controller.ResponseException
+import dto.ResponseException
 import exceptions.ApiException
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus

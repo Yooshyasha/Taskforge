@@ -1,4 +1,4 @@
-package com.yooshyasha.aiservice.dto.controller
+package dto
 
 import java.util.*
 

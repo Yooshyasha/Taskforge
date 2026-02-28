@@ -1,6 +1,6 @@
 package com.yooshyasha.aiservice.controller
 
-import com.yooshyasha.aiservice.dto.controller.ResponsePostGenerate
+import dto.ResponsePostGenerate
 import com.yooshyasha.aiservice.service.GenerationService
 import dto.GenerateRequest
 import dto.ResponseGetTaskStatus

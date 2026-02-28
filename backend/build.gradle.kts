@@ -9,6 +9,8 @@ group = "com.yooshyasha"
 version = "0.0.1-SNAPSHOT"
 description = "backend"
 
+val ktorVersion = "3.0.3"
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
@@ -27,6 +29,8 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation(project(":shared"))
+
+    implementation("io.ktor:ktor-client-okhttp-jvm:$ktorVersion")
 }
 
 

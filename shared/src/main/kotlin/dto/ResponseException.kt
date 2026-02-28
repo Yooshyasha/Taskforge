@@ -1,4 +1,4 @@
-package com.yooshyasha.aiservice.dto.controller
+package dto
 
 data class ResponseException(
     val message: String,

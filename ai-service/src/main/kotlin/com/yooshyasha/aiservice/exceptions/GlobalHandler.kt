@@ -1,6 +1,6 @@
 package com.yooshyasha.aiservice.exceptions
 
-import com.yooshyasha.aiservice.dto.controller.ResponseException
+import dto.ResponseException
 import exceptions.ApiException
 import jakarta.validation.ConstraintViolationException
 import org.slf4j.LoggerFactory

@@ -1,8 +1,8 @@
 package com.yooshyasha.backend.feign
 
-import com.yooshyasha.aiservice.dto.controller.ResponsePostGenerate
 import dto.GenerateRequest
 import dto.ResponseGetTaskStatus
+import dto.ResponsePostGenerate
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
