@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component
 class TaskManagerAgentProvider(
     @Qualifier("aiExecutor") private val aiExecutor: SingleLLMPromptExecutor,
     private val llModel: LLModel,
+    private val systemPrompt: String,
 ) : BaseAgentProvider<String, GeneratedTasksResponse> {
     override fun provideAgent(): AIAgent<String, GeneratedTasksResponse> {
         val strategy = strategy<String, GeneratedTasksResponse>("task manager") {
@@ -27,7 +28,7 @@ class TaskManagerAgentProvider(
             strategy = strategy,
             agentConfig = AIAgentConfig(
                 prompt = prompt("task manager agent prompt") {
-                    system("")
+                    system(systemPrompt)
                 },
                 model = llModel,
                 maxAgentIterations = 50,

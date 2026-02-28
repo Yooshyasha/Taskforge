@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.core.io.ResourceLoader
 
 @Configuration
 class AIAgentConfig(
@@ -20,6 +21,7 @@ class AIAgentConfig(
     @Qualifier("openRouterExecutor") private val openRouterAIExecutor: SingleLLMPromptExecutor?,
     @Qualifier("deepSeekExecutor") private val deepSeekAIExecutor: SingleLLMPromptExecutor?,
     @Value("ai.model.id") private val aiModelId: String,
+    private val resourceLoader: ResourceLoader,
 ) {
     @Bean
     fun aiExecutor(): SingleLLMPromptExecutor {
@@ -55,4 +57,7 @@ class AIAgentConfig(
             contextLength = 32_000,
         )
     }
+
+    @Bean
+    fun systemPrompt(): String = resourceLoader.getResource("system_prompt.txt").file.readText()
 }
