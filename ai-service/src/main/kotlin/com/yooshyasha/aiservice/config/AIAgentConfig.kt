@@ -1,6 +1,7 @@
 package com.yooshyasha.aiservice.config
 
 import ai.koog.prompt.executor.llms.SingleLLMPromptExecutor
+import ai.koog.prompt.executor.ollama.client.OllamaClient
 import ai.koog.prompt.llm.LLMCapability
 import ai.koog.prompt.llm.LLMProvider
 import ai.koog.prompt.llm.LLModel
@@ -18,6 +19,7 @@ class AIAgentConfig(
     @Qualifier("anthropicExecutor") private val anthropicAIExecutor: SingleLLMPromptExecutor?,
     @Qualifier("googleExecutor") private val googleAIExecutor: SingleLLMPromptExecutor?,
     @Qualifier("ollamaExecutor") private val ollamaAIExecutor: SingleLLMPromptExecutor?,
+    @Value("\${ai.koog.ollama.base-url}") private val ollamaBaseUrl: String?,
     @Qualifier("openRouterExecutor") private val openRouterAIExecutor: SingleLLMPromptExecutor?,
     @Qualifier("deepSeekExecutor") private val deepSeekAIExecutor: SingleLLMPromptExecutor?,
     @Value("\${ai.model.id}") private val aiModelId: String,
@@ -29,7 +31,7 @@ class AIAgentConfig(
             openaiAIExecutor != null -> openaiAIExecutor
             anthropicAIExecutor != null -> anthropicAIExecutor
             googleAIExecutor != null -> googleAIExecutor
-            ollamaAIExecutor != null -> ollamaAIExecutor
+            ollamaAIExecutor != null -> SingleLLMPromptExecutor(llmClient = OllamaClient(baseUrl = ollamaBaseUrl!!))
             openRouterAIExecutor != null -> openRouterAIExecutor
             deepSeekAIExecutor != null -> deepSeekAIExecutor
             else -> throw BeanCreationException("Zero available executors")
