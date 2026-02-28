@@ -11,6 +11,7 @@ import dto.ResponsePostGenerate
 import enum.TaskStatus
 import exceptions.ApiException
 import exceptions.TaskNotFound
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -18,7 +19,10 @@ import java.util.*
 class GenerationService(
     private val aiServiceFeignClient: AiServiceFeignClient,
     private val generatedTasksStorage: GeneratedTasksStorage,
+    private val vikunjaService: VikunjaService,
 ) {
+    private val logger = LoggerFactory.getLogger(this::class.java)
+
     fun generate(data: GenerateRequest): ResponsePostGenerate {
         return try {
             aiServiceFeignClient.generate(data)
@@ -51,6 +55,17 @@ class GenerationService(
     fun confirm(taskId: UUID, data: RequestConfirmTasks): ResponseConfirm {
         generatedTasksStorage.update(taskId, data)
         val creationData = generatedTasksStorage.getTasks(taskId)
-        TODO()
+
+        val project = vikunjaService.createProject(creationData.projectName)
+        val tasks = creationData.tasks.onEach { task ->
+            try {
+                vikunjaService.createTask(project.id, task.name, task.description, task.tags)
+                // TODO comments
+            } catch (e: Exception) {
+                logger.error("Error processing send task ($task)", e)
+            }
+        }
+        generatedTasksStorage.remove(taskId)
+        return ResponseConfirm(true, creationData)
     }
 }
