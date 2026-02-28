@@ -35,7 +35,7 @@ class AIAgentConfig(
     }
 
     @Bean
-    fun llmModel(aiExecutor: SingleLLMPromptExecutor): LLModel {
+    fun llModel(aiExecutor: SingleLLMPromptExecutor): LLModel {
         val provider = when {
             openaiAIExecutor != null -> LLMProvider.OpenAI
             anthropicAIExecutor != null -> LLMProvider.Anthropic
