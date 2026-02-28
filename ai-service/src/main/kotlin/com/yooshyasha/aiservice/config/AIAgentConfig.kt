@@ -1,5 +1,6 @@
 package com.yooshyasha.aiservice.config
 
+import ai.koog.prompt.executor.clients.openai.OpenAIModels
 import ai.koog.prompt.executor.llms.SingleLLMPromptExecutor
 import ai.koog.prompt.executor.ollama.client.OllamaClient
 import ai.koog.prompt.llm.LLMCapability
@@ -39,22 +40,23 @@ class AIAgentConfig(
 
     @Bean
     fun llModel(aiExecutor: SingleLLMPromptExecutor): LLModel {
-        val provider = when {
-            openaiAIExecutor != null -> LLMProvider.OpenAI
-            anthropicAIExecutor != null -> LLMProvider.Anthropic
-            googleAIExecutor != null -> LLMProvider.Google
-            ollamaAIExecutor != null -> LLMProvider.Ollama
-            openRouterAIExecutor != null -> LLMProvider.OpenRouter
-            deepSeekAIExecutor != null -> LLMProvider.DeepSeek
-            else -> throw BeanCreationException("Zero available executors")
-        }
-
-        return LLModel(
-            provider = provider,
-            id = aiModelId,
-            capabilities = listOf(LLMCapability.Temperature, LLMCapability.Completion),
-            contextLength = 32_000,
-        )
+//        val provider = when {
+//            openaiAIExecutor != null -> LLMProvider.OpenAI
+//            anthropicAIExecutor != null -> LLMProvider.Anthropic
+//            googleAIExecutor != null -> LLMProvider.Google
+//            ollamaAIExecutor != null -> LLMProvider.Ollama
+//            openRouterAIExecutor != null -> LLMProvider.OpenRouter
+//            deepSeekAIExecutor != null -> LLMProvider.DeepSeek
+//            else -> throw BeanCreationException("Zero available executors")
+//        }
+//
+//        return LLModel(
+//            provider = provider,
+//            id = aiModelId,
+//            capabilities = listOf(LLMCapability.Temperature, LLMCapability.Completion),
+//            contextLength = 32_000,
+//        )
+        return OpenAIModels.Chat.GPT5
     }
 
     @Bean
