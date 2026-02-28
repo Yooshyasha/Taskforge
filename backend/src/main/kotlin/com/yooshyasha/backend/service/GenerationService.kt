@@ -1,9 +1,9 @@
 package com.yooshyasha.backend.service
 
-import com.yooshyasha.aiservice.dto.controller.ResponsePostGenerate
 import com.yooshyasha.backend.feign.AiServiceFeignClient
 import dto.GenerateRequest
 import dto.ResponseGetTaskStatus
+import dto.ResponsePostGenerate
 import enum.TaskStatus
 import exceptions.ApiException
 import exceptions.TaskNotFound
