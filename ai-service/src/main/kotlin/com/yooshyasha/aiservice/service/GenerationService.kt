@@ -1,6 +1,7 @@
 package com.yooshyasha.aiservice.service
 
 import com.yooshyasha.aiservice.dto.controller.ResponsePostGenerate
+import com.yooshyasha.aiservice.storage.FutureStorage
 import dto.GeneratedTasksResponse
 import dto.ResponseGetTaskStatus
 import enum.TaskStatus
@@ -11,23 +12,23 @@ import java.util.*
 @Service
 class GenerationService(
     private val aiTaskGenerationService: AITaskGenerationService,
-    private val futureStorageService: FutureStorageService,
+    private val futureStorage: FutureStorage,
 ) {
     fun generate(text: String): ResponsePostGenerate {
         val taskId = UUID.randomUUID()
         val task = aiTaskGenerationService.generation(text)
-        futureStorageService.save(taskId, task)
+        futureStorage.save(taskId, task)
 
         return ResponsePostGenerate(taskId)
     }
 
     suspend fun getTask(taskId: UUID): ResponseGetTaskStatus {
-        val task: Deferred<GeneratedTasksResponse> = futureStorageService.getTask(taskId)
+        val task: Deferred<GeneratedTasksResponse> = futureStorage.getTask(taskId)
         val response: GeneratedTasksResponse?
         try {
             response = aiTaskGenerationService.getTaskResult(task)
         } catch (e: Exception) {
-            futureStorageService.remove(taskId)
+            futureStorage.remove(taskId)
             return ResponseGetTaskStatus(TaskStatus.FAILED, null)
         }
 
@@ -36,7 +37,7 @@ class GenerationService(
             null -> ResponseGetTaskStatus(TaskStatus.ACTIVE, null)
 
             else -> {
-                futureStorageService.remove(taskId)
+                futureStorage.remove(taskId)
                 ResponseGetTaskStatus(TaskStatus.COMPLETE, response)
             }
         }

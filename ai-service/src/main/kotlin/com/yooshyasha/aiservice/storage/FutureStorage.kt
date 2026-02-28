@@ -1,14 +1,14 @@
-package com.yooshyasha.aiservice.service
+package com.yooshyasha.aiservice.storage
 
 import com.yooshyasha.aiservice.exceptions.TaskNotFound
 import dto.GeneratedTasksResponse
 import io.ktor.util.collections.*
 import kotlinx.coroutines.Deferred
-import org.springframework.stereotype.Service
+import org.springframework.stereotype.Component
 import java.util.*
 
-@Service
-class FutureStorageService {
+@Component
+class FutureStorage {
     private val taskMap: ConcurrentMap<UUID, Deferred<GeneratedTasksResponse>> = ConcurrentMap()
 
     fun save(taskId: UUID, data: Deferred<GeneratedTasksResponse>) {
