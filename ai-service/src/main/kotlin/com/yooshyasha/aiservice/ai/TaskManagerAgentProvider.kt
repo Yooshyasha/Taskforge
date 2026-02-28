@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class TaskManagerAgentProvider(
-    @Qualifier("aiExecutor") private val aiExecutor: SingleLLMPromptExecutor,
+    @param:Qualifier("aiExecutor") private val aiExecutor: SingleLLMPromptExecutor,
     private val llModel: LLModel,
     private val systemPrompt: String,
 ) : BaseAgentProvider<String, GeneratedTasksResponse> {
@@ -43,7 +43,7 @@ class TaskManagerAgentProvider(
             })
             edge(nodeGenerateTasks forwardTo nodeVerify transformed {
                 it
-                    .onSuccess { response -> storage.set(generatedTasksKey, response.structure) }
+                    .onSuccess { response -> storage.set(generatedTasksKey, response.data) }
                     .onFailure { throw Exception("structure failed") }
                 val original = storage.get(originalKey)!!
 
@@ -52,14 +52,14 @@ class TaskManagerAgentProvider(
                     ORIGINAL:
                     $original
                     GENERATED:
-                    ${it.getOrNull()!!.structure}
+                    ${it.getOrNull()!!.data}
                 """.trimIndent()
             })
 
             edge(nodeVerify forwardTo nodeGenerateTasks onCondition {
                 it.onFailure { throw Exception("structure failed") }
 
-                it.getOrNull()!!.structure.status == VerifyStatus.FAIL
+                it.getOrNull()!!.data.status == VerifyStatus.FAIL
             } transformed {
                 val original = storage.get(originalKey)!!
                 """
@@ -67,13 +67,13 @@ class TaskManagerAgentProvider(
                     ORIGINAL: 
                     $original
                     REFINEMENT:
-                    ${it.getOrNull()!!.structure.refinementInstruction}
+                    ${it.getOrNull()!!.data.refinementInstruction}
                 """.trimIndent()
             })
             edge(nodeVerify forwardTo nodeFinish onCondition {
                 it.onFailure { throw Exception("structure failed") }
 
-                it.getOrNull()!!.structure.status == VerifyStatus.OK
+                it.getOrNull()!!.data.status == VerifyStatus.OK
             } transformed {
                 storage.get(generatedTasksKey)!!
             })
