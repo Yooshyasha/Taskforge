@@ -1,0 +1,22 @@
+networks:
+  app:
+
+services:
+  ai-service:
+    build:
+      dockerfile: ai-service/Dockerfile
+    env_file:
+      - .env
+    networks:
+      - app
+  backend:
+    build:
+      dockerfile: backend/Dockerfile
+    environment:
+      - feign.clients.aiServiceClient.url=http://ai-service
+    env_file:
+      - .env
+    networks:
+      - app
+    ports:
+      - "8080:8080"
