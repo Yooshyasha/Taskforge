@@ -1,13 +1,14 @@
 package com.yooshyasha.aiservice.controller
 
-import dto.ResponsePostGenerate
 import com.yooshyasha.aiservice.service.GenerationService
 import dto.GenerateRequest
 import dto.ResponseGetTaskStatus
+import dto.ResponsePostGenerate
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
-@RestController("/v1/api/generation")
+@RestController
+@RequestMapping("/v1/api/generation")
 class GenerationController(
     private val generationService: GenerationService,
 ) {
