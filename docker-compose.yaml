@@ -35,3 +35,18 @@ services:
       timeout: 5s
       retries: 5
       start_period: 40s
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./frontend:/usr/share/nginx/html
+      - ./data/cert.crt:/etc/ssl/certs/cert.crt
+      - ./data/cert.key:/etc/ssl/certs/cert.key
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - app
+    depends_on:
+      - backend
