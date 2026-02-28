@@ -1,6 +1,8 @@
 package com.yooshyasha.backend.service
 
+import com.yooshyasha.backend.exceptions.GeneratedTasksNotFound
 import com.yooshyasha.backend.feign.AiServiceFeignClient
+import com.yooshyasha.backend.storage.GeneratedTasksStorage
 import dto.GenerateRequest
 import dto.ResponseGetTaskStatus
 import dto.ResponsePostGenerate
@@ -13,6 +15,7 @@ import java.util.*
 @Service
 class GenerationService(
     private val aiServiceFeignClient: AiServiceFeignClient,
+    private val generatedTasksStorage: GeneratedTasksStorage,
 ) {
     fun generate(data: GenerateRequest): ResponsePostGenerate {
         return try {
@@ -28,7 +31,12 @@ class GenerationService(
 
     fun getTask(taskId: UUID): ResponseGetTaskStatus {
         return try {
-            aiServiceFeignClient.getTask(taskId)
+            return try {
+                val result = generatedTasksStorage.getTasks(taskId)
+                ResponseGetTaskStatus(TaskStatus.COMPLETE, result)
+            } catch (e: GeneratedTasksNotFound) {
+                aiServiceFeignClient.getTask(taskId)
+            }
         } catch (e: feign.FeignException.NotFound) {
             throw TaskNotFound()
         } catch (e: feign.FeignException) {
