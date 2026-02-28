@@ -1,3 +1,3 @@
-package com.yooshyasha.aiservice.exceptions
+package exceptions
 
 class TaskNotFound : ApiException("Task not found", 404)

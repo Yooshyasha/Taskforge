@@ -1,8 +1,7 @@
-package com.yooshyasha.aiservice.exceptions
+package com.yooshyasha.backend.exceptions
 
 import com.yooshyasha.aiservice.dto.controller.ResponseException
 import exceptions.ApiException
-import jakarta.validation.ConstraintViolationException
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -46,12 +45,6 @@ class GlobalHandler {
     fun handleMissingParam(e: MissingServletRequestParameterException): ResponseEntity<ResponseException> {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(ResponseException("Missing parameter: ${e.parameterName}", 400))
-    }
-
-    @ExceptionHandler(ConstraintViolationException::class)
-    fun handleConstraintViolation(e: ConstraintViolationException): ResponseEntity<ResponseException> {
-        val message = e.constraintViolations.joinToString(", ") { "${it.propertyPath}: ${it.message}" }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseException(message, 400))
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException::class)

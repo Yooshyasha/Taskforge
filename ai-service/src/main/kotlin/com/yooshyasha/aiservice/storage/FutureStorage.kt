@@ -1,6 +1,6 @@
 package com.yooshyasha.aiservice.storage
 
-import com.yooshyasha.aiservice.exceptions.TaskNotFound
+import exceptions.TaskNotFound
 import dto.GeneratedTasksResponse
 import io.ktor.util.collections.*
 import kotlinx.coroutines.Deferred
