@@ -19,7 +19,7 @@ services:
     build:
       dockerfile: backend/Dockerfile
     environment:
-      - feign.clients.aiServiceClient.url=http://ai-service
+      - feign.clients.aiServiceClient.url=http://ai-service:8080
     env_file:
       - .env
     networks:
