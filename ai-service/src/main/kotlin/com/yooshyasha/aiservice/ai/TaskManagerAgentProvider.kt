@@ -10,6 +10,7 @@ import ai.koog.agents.core.tools.ToolRegistry
 import ai.koog.prompt.dsl.prompt
 import ai.koog.prompt.executor.llms.SingleLLMPromptExecutor
 import ai.koog.prompt.llm.LLModel
+import ai.koog.prompt.params.LLMParams
 import com.yooshyasha.aiservice.ai.base.BaseAgentProvider
 import com.yooshyasha.aiservice.dto.ai.VerifyTasksResult
 import com.yooshyasha.aiservice.enum.VerifyStatus
@@ -83,7 +84,7 @@ class TaskManagerAgentProvider(
             promptExecutor = aiExecutor,
             strategy = strategy,
             agentConfig = AIAgentConfig(
-                prompt = prompt("task manager agent prompt") {
+                prompt = prompt("task manager agent prompt", params = LLMParams(maxTokens = 128_000)) {
                     system(systemPrompt)
                 },
                 model = llModel,
