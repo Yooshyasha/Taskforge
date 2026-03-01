@@ -46,3 +46,20 @@ data class TaskCommentResponse(
     val created: String,
     val updated: String
 )
+
+data class LabelRequest(
+    val title: String,
+)
+
+data class LabelResponse(
+    val id: Int,
+    val title: String,
+)
+
+data class AddLabelRequest(
+    val label_id: Int,
+)
+
+data class AddLabelResponse(
+    val label_id: Int,
+)

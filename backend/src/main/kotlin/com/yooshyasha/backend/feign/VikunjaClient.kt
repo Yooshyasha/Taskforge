@@ -34,4 +34,17 @@ interface VikunjaClient {
         @PathVariable taskId: Int,
         @RequestBody request: TaskCommentRequest
     ): TaskCommentResponse
+
+    @PutMapping("/labels")
+    fun createLabel(
+        @RequestHeader("Authorization") auth: String,
+        @RequestBody request: LabelRequest,
+    ): LabelResponse
+
+    @PutMapping("/tasks/{taskId}/labels")
+    fun addLabelToTask(
+        @RequestHeader("Authorization") auth: String,
+        @PathVariable taskId: Int,
+        @RequestBody request: AddLabelRequest,
+    ): AddLabelResponse
 }
