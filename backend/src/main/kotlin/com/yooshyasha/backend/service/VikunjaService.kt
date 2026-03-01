@@ -19,10 +19,9 @@ class VikunjaService(
         val request = TaskRequest(
             title = title,
             description = description,
-            project_id = projectId,
             labels = labels.map { TaskLabel(it) }
         )
-        return vikunjaClient.createTask(config.vikunjaAuthorization(), request)
+        return vikunjaClient.createTask(config.vikunjaAuthorization(), request, projectId)
     }
 
     fun addCommentToTask(taskId: Int, text: String): TaskCommentResponse {

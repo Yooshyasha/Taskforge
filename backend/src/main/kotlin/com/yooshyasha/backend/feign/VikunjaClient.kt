@@ -21,10 +21,11 @@ interface VikunjaClient {
         @RequestBody request: ProjectRequest
     ): ProjectResponse
 
-    @PutMapping("/tasks", consumes = [MediaType.APPLICATION_JSON_VALUE])
+    @PutMapping("/projects/{projectId}/tasks", consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun createTask(
         @RequestHeader("Authorization") auth: String,
-        @RequestBody request: TaskRequest
+        @RequestBody request: TaskRequest,
+        @PathVariable projectId: Int,
     ): TaskResponse
 
     @PutMapping("/tasks/{taskId}/comments", consumes = [MediaType.APPLICATION_JSON_VALUE])
