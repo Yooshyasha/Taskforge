@@ -82,6 +82,14 @@ class GenerationService(
                         success = false
                     }
                 }
+                task.tags.onEach { tag ->
+                    try {
+                        val label = vikunjaService.createLabel(tag)
+                        vikunjaService.addLabelToTask(apiTask.id, label.id)
+                    } catch (e: Exception) {
+                        logger.error("Error add label ($tag) to task (${apiTask.id})", e)
+                    }
+                }
             } catch (e: Exception) {
                 logger.error("Error processing send task ($task)", e)
                 success = false
