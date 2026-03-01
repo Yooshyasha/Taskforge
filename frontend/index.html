@@ -7,17 +7,24 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<div id="toast-container"></div>
+
 <div id="app">
     <header>
         <span class="logo">task-gen</span>
         <span class="version">v0.1.0</span>
+        <span id="offline-badge" class="hidden">offline</span>
+        <div class="header-actions">
+            <button class="btn-ghost small" onclick="clearStorage()">[ clear data ]</button>
+        </div>
     </header>
 
     <section id="generate-section">
-        <div class="label">project description</div>
-        <textarea id="input-text" placeholder="describe your project..." rows="6"></textarea>
-        <div class="row">
+        <div class="label">project description <span class="muted small">(auto-saved)</span></div>
+        <textarea id="input-text" placeholder="describe your project..." rows="6" oninput="saveDraft()"></textarea>
+        <div class="row gap" style="margin-top:10px">
             <button id="btn-generate" onclick="generate()">[ generate ]</button>
+            <span id="draft-hint" class="muted small hidden">↩ draft restored</span>
         </div>
     </section>
 
@@ -25,22 +32,42 @@
         <div class="spinner-row">
             <span class="spinner"></span>
             <span id="status-text">waiting for generation...</span>
+            <span id="elapsed-time" class="muted small"></span>
+        </div>
+        <div class="progress-bar"><div id="progress-fill"></div></div>
+        <div class="status-actions">
+            <button id="btn-resume" onclick="resumePoll()" class="btn-ghost small hidden">[ resume polling ]</button>
+            <button onclick="cancelGeneration()" class="btn-ghost small">[ cancel ]</button>
         </div>
     </section>
 
     <section id="error-section" class="hidden">
         <div class="error-box" id="error-msg"></div>
-        <button onclick="reset()">[ back ]</button>
+        <div class="row gap" style="margin-top:12px">
+            <button id="btn-retry" onclick="retryAction()" class="hidden">[ retry ]</button>
+            <button onclick="goBack()">[ back ]</button>
+        </div>
     </section>
 
     <section id="tasks-section" class="hidden">
         <div class="tasks-header">
-            <span id="project-name"></span>
-            <button id="btn-confirm" onclick="confirm()">[ confirm ]</button>
+            <div>
+                <span id="project-name"></span>
+                <span id="task-count" class="muted small"></span>
+            </div>
+            <div class="row gap">
+                <span id="autosave-indicator" class="muted small"></span>
+                <button id="btn-confirm" onclick="confirmTasks()">[ confirm ]</button>
+                <button onclick="confirmReset()" class="btn-ghost small">[ new ]</button>
+            </div>
+        </div>
+        <div id="undo-bar" class="undo-bar hidden">
+            task deleted — <button class="btn-inline" onclick="undoDelete()">[ undo ]</button>
         </div>
         <div id="tasks-list"></div>
     </section>
 </div>
+
 <script src="app.js"></script>
 </body>
 </html>
