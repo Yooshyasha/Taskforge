@@ -58,6 +58,7 @@ data class LabelResponse(
 
 data class AddLabelRequest(
     val label_id: Int,
+    val hex_color: String,
 )
 
 data class AddLabelResponse(

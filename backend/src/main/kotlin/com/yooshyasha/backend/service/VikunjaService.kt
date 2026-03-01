@@ -4,6 +4,7 @@ import com.yooshyasha.backend.config.VikunjaConfig
 import com.yooshyasha.backend.dto.api.*
 import com.yooshyasha.backend.feign.VikunjaClient
 import org.springframework.stereotype.Service
+import kotlin.random.Random
 
 @Service
 class VikunjaService(
@@ -34,7 +35,14 @@ class VikunjaService(
     }
 
     fun addLabelToTask(taskId: Int, labelId: Int): AddLabelResponse {
-        val request = AddLabelRequest(label_id = labelId)
+        val request = AddLabelRequest(label_id = labelId, hex_color = generateHexColor())
         return vikunjaClient.addLabelToTask(config.vikunjaAuthorization(), taskId, request)
+    }
+
+    private fun generateHexColor(): String {
+        val r = Random.nextInt(0, 256)
+        val g = Random.nextInt(0, 256)
+        val b = Random.nextInt(0, 256)
+        return String.format("#%02X%02X%02X", r, g, b)
     }
 }
