@@ -22,13 +22,14 @@ const hide = id => $(id).classList.add('hidden');
 function saveState() {
     const state = {
         screen: currentScreen(),
+
         taskId: currentTaskId,
         inputText: $('input-text').value,
         tasksData,
         deletedIds: [...deletedIds],
         projectName: $('project-name').textContent,
         confirmed,
-        cardEdits: currentTaskId && screen('tasks-section') ? collectAllEdits() : null
+        cardEdits: currentTaskId && currentScreen() === 'tasks-section' ? collectAllEdits() : null
     };
     try { localStorage.setItem(LS, JSON.stringify(state)); } catch(e) {}
 }
@@ -50,7 +51,7 @@ function clearStorage() {
 
 function currentScreen() {
     for (const s of ['generate-section','status-section','error-section','tasks-section']) {
-        if (!$(s).classList.contains('hidden')) return s;
+        if ($(s) && !$(s).classList.contains('hidden')) return s;
     }
     return 'generate-section';
 }
@@ -487,16 +488,16 @@ function collectCard(card) {
 async function confirmTasks() {
     if (confirmed) return;
     const cards = [...$('tasks-list').querySelectorAll('.task-card')];
-    const confirmTasks = [];
+    const payload = [];
 
     cards.forEach(card => {
         const r = collectCard(card);
-        confirmTasks.push({ status: r.status, taskDTO: r.taskDTO });
+        payload.push({ status: r.status, taskDTO: r.taskDTO });
     });
 
     deletedIds.forEach(id => {
         const t = tasksData.find(x => x._id === id);
-        if (t) confirmTasks.push({ status: 'DELETE', taskDTO: { name: t.name, description: t.description, comments: t.comments || [], tags: t.tags || [] } });
+        if (t) payload.push({ status: 'DELETE', taskDTO: { name: t.name, description: t.description, comments: t.comments || [], tags: t.tags || [] } });
     });
 
     $('btn-confirm').disabled = true;
@@ -507,7 +508,7 @@ async function confirmTasks() {
         const res = await fetch(`${API}/v1/api/generation/${currentTaskId}/confirm`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ confirmTasks })
+            body: JSON.stringify({ confirmTasks: payload })
         });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
