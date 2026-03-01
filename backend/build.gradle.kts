@@ -35,6 +35,8 @@ dependencies {
 
     implementation("io.ktor:ktor-client-okhttp-jvm:$ktorVersion")
 
+    implementation("io.github.openfeign:feign-okhttp")
+
     // Source: https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6")
 }

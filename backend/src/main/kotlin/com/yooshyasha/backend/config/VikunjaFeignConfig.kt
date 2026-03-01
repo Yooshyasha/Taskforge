@@ -1,6 +1,7 @@
 package com.yooshyasha.backend.config
 
 import feign.Client
+import feign.
 import feign.RequestInterceptor
 import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Component
@@ -42,6 +43,6 @@ class VikunjaFeignConfig(
             )
             .hostnameVerifier { _, _ -> true }
 
-        return okHttpClient.build() as Client
+        return
     }
 }
