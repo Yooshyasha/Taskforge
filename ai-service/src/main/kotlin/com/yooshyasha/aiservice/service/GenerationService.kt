@@ -4,6 +4,7 @@ import dto.ResponsePostGenerate
 import com.yooshyasha.aiservice.storage.FutureStorage
 import dto.GeneratedTasksResponse
 import dto.ResponseGetTaskStatus
+import dto.project.VikunjaProjectDTO
 import enum.TaskStatus
 import kotlinx.coroutines.Deferred
 import org.springframework.stereotype.Service
@@ -14,7 +15,7 @@ class GenerationService(
     private val aiTaskGenerationService: AITaskGenerationService,
     private val futureStorage: FutureStorage,
 ) {
-    fun generate(text: String): ResponsePostGenerate {
+    fun generate(text: String, vikunjaProject: VikunjaProjectDTO?): ResponsePostGenerate {
         val taskId = UUID.randomUUID()
         val task = aiTaskGenerationService.generation(text)
         futureStorage.save(taskId, task)
