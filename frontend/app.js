@@ -218,7 +218,7 @@ async function generate() {
     retryFn = generate;
 
     try {
-        const res = await fetch(`${API}/v1/api/generation/`, {
+        const res = await fetch(`${API}/v1/api/generation`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ text })
