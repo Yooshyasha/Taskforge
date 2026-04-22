@@ -7,5 +7,5 @@ import kotlinx.serialization.Serializable
 data class VerifyTasksResult(
     val status: VerifyStatus,
     val issues: List<String>,
-    val refinementInstruction: String,
+    val refinementInstruction: String?,
 )
