@@ -20,64 +20,53 @@ import org.springframework.web.bind.annotation.RequestHeader
 interface VikunjaClient {
     @PutMapping("/projects", consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun createProject(
-        @RequestHeader("Authorization") auth: String,
         @RequestBody request: ProjectRequest
     ): ProjectResponse
 
     @PutMapping("/projects/{projectId}/tasks", consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun createTask(
-        @RequestHeader("Authorization") auth: String,
         @RequestBody request: TaskRequest,
         @PathVariable projectId: Int,
     ): TaskResponse
 
     @PutMapping("/tasks/{taskId}/comments", consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun createTaskComment(
-        @RequestHeader("Authorization") auth: String,
         @PathVariable taskId: Int,
         @RequestBody request: TaskCommentRequest
     ): TaskCommentResponse
 
     @PutMapping("/labels")
     fun createLabel(
-        @RequestHeader("Authorization") auth: String,
         @RequestBody request: LabelRequest,
     ): LabelResponse
 
     @PutMapping("/tasks/{taskId}/labels")
     fun addLabelToTask(
-        @RequestHeader("Authorization") auth: String,
         @PathVariable taskId: Int,
         @RequestBody request: AddLabelRequest,
     ): AddLabelResponse
 
     @GetMapping("/projects")
-    fun getProjects(
-        @RequestHeader("Authorization") auth: String,
-    ): List<ProjectResponse>
+    fun getProjects(): List<ProjectResponse>
 
     @GetMapping("/projects/{projectId}/tasks")
     fun getProjectTasks(
-        @RequestHeader("Authorization") auth: String,
         @PathVariable projectId: Int,
     ): List<TaskResponse>
 
     @GetMapping("/projects/{projectId}/buckets")
     fun getProjectBuckets(
-        @RequestHeader("Authorization") auth: String,
         @PathVariable projectId: Int,
     ): List<BucketResponse>
 
     @PostMapping("/tasks/{taskId}", consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun updateTask(
-        @RequestHeader("Authorization") auth: String,
         @PathVariable taskId: Int,
         @RequestBody request: TaskUpdateRequest,
     ): TaskResponse
 
     @DeleteMapping("/tasks/{taskId}")
     fun deleteTask(
-        @RequestHeader("Authorization") auth: String,
         @PathVariable taskId: Int,
     ): DeleteResponse
 }

@@ -18,7 +18,7 @@ class VikunjaService(
 ) {
     fun createProject(title: String): ProjectResponse {
         val request = ProjectRequest(title = title)
-        return vikunjaClient.createProject(config.vikunjaAuthorization(), request)
+        return vikunjaClient.createProject(request)
     }
 
     fun createTask(projectId: Int, title: String, description: String): TaskResponse {
@@ -26,22 +26,22 @@ class VikunjaService(
             title = title,
             description = description,
         )
-        return vikunjaClient.createTask(config.vikunjaAuthorization(), request, projectId)
+        return vikunjaClient.createTask(request, projectId)
     }
 
     fun addCommentToTask(taskId: Int, text: String): TaskCommentResponse {
         val request = TaskCommentRequest(comment = text)
-        return vikunjaClient.createTaskComment(config.vikunjaAuthorization(), taskId, request)
+        return vikunjaClient.createTaskComment(taskId, request)
     }
 
     fun createLabel(title: String): LabelResponse {
         val request = LabelRequest(title = title)
-        return vikunjaClient.createLabel(config.vikunjaAuthorization(), request)
+        return vikunjaClient.createLabel(request)
     }
 
     fun addLabelToTask(taskId: Int, labelId: Int): AddLabelResponse {
         val request = AddLabelRequest(label_id = labelId, hex_color = generateHexColor())
-        return vikunjaClient.addLabelToTask(config.vikunjaAuthorization(), taskId, request)
+        return vikunjaClient.addLabelToTask(taskId, request)
     }
 
     private fun generateHexColor(): String {
@@ -52,7 +52,7 @@ class VikunjaService(
     }
 
     fun getProjectTasks(projectId: Int): List<VikunjaTaskDTO> {
-        val response = vikunjaClient.getProjectTasks(config.vikunjaAuthorization(), projectId)
+        val response = vikunjaClient.getProjectTasks(projectId)
 
         return response.map { task ->
             val status = if (task.done) VikunjaTaskStatus.COMPLETE else VikunjaTaskStatus.TODO
@@ -61,7 +61,7 @@ class VikunjaService(
     }
 
     fun getProjects(): List<VikunjaProjectDTO> {
-        val response = vikunjaClient.getProjects(config.vikunjaAuthorization())
+        val response = vikunjaClient.getProjects()
 
         return response.map { project ->
             VikunjaProjectDTO(
@@ -83,10 +83,10 @@ class VikunjaService(
             title = task.name, description = task.description, done = task.done,
         )
 
-        return vikunjaClient.updateTask(config.vikunjaAuthorization(), taskId, request)
+        return vikunjaClient.updateTask(taskId, request)
     }
 
     fun deleteTask(taskId: Int): DeleteResponse {
-        return vikunjaClient.deleteTask(config.vikunjaAuthorization(), taskId)
+        return vikunjaClient.deleteTask(taskId)
     }
 }
