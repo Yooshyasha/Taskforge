@@ -3,6 +3,9 @@ package com.yooshyasha.backend.service
 import com.yooshyasha.backend.config.VikunjaConfig
 import com.yooshyasha.backend.dto.api.*
 import com.yooshyasha.backend.feign.VikunjaClient
+import dto.project.VikunjaProjectDTO
+import dto.project.VikunjaTaskDTO
+import enum.project.VikunjaTaskStatus
 import org.springframework.stereotype.Service
 import kotlin.random.Random
 
@@ -44,5 +47,24 @@ class VikunjaService(
         val g = Random.nextInt(0, 256)
         val b = Random.nextInt(0, 256)
         return String.format("#%02X%02X%02X", r, g, b)
+    }
+
+    fun getProjectTasks(projectId: Int): List<VikunjaTaskDTO> {
+        val response = vikunjaClient.getProjectTasks(config.vikunjaAuthorization(), projectId)
+
+        return response.map { task ->
+            val status = if (task.done) VikunjaTaskStatus.COMPLETE else VikunjaTaskStatus.TODO
+            VikunjaTaskDTO(task.id, task.title, task.description.orEmpty(), status)
+        }
+    }
+
+    fun getProjects(): List<VikunjaProjectDTO> {
+        val response = vikunjaClient.getProjects(config.vikunjaAuthorization())
+
+        return response.map { project ->
+            VikunjaProjectDTO(
+                project.id, project.title, tasks = getProjectTasks(project.id)
+            )
+        }
     }
 }
