@@ -3,13 +3,16 @@ package com.yooshyasha.backend.service
 import com.yooshyasha.backend.dto.controller.RequestConfirmTasks
 import com.yooshyasha.backend.dto.controller.RequestStartGenerate
 import com.yooshyasha.backend.dto.controller.ResponseConfirm
+import com.yooshyasha.backend.dto.entity.InProcessDTO
 import com.yooshyasha.backend.exceptions.GeneratedTasksNotFound
 import com.yooshyasha.backend.feign.AiServiceFeignClient
 import com.yooshyasha.backend.storage.GeneratedTasksStorage
+import com.yooshyasha.backend.storage.InProcessStorage
 import dto.GenerateRequest
 import dto.GeneratedTasksResponse
 import dto.ResponseGetTaskStatus
 import dto.ResponsePostGenerate
+import dto.project.VikunjaTaskDTO
 import enum.TaskStatus
 import exceptions.ApiException
 import exceptions.TaskNotFound
@@ -21,13 +24,23 @@ import java.util.*
 class GenerationService(
     private val aiServiceFeignClient: AiServiceFeignClient,
     private val generatedTasksStorage: GeneratedTasksStorage,
+    private val inProcessStorage: InProcessStorage,
     private val vikunjaService: VikunjaService,
 ) {
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     fun generate(data: RequestStartGenerate): ResponsePostGenerate {
-        return try {
-            aiServiceFeignClient.generate(data)
+        var projectTasks: List<VikunjaTaskDTO> = listOf()
+        val generateData = if (data.projectId == null) {
+            GenerateRequest(text = data.text, vikunjaProject = null)
+        } else {
+            val project = vikunjaService.getProject(data.projectId)
+            projectTasks = project.tasks
+            GenerateRequest(text = data.text, vikunjaProject = project)
+        }
+
+        val response = try {
+            aiServiceFeignClient.generate(generateData)
         } catch (e: feign.FeignException.BadRequest) {
             throw ApiException("Invalid request", 400)
         } catch (e: feign.FeignException) {
@@ -35,6 +48,10 @@ class GenerationService(
         } catch (e: Exception) {
             throw ApiException("Unexpected error", 500)
         }
+
+        inProcessStorage.save(response.taskId, InProcessDTO(data.projectId, projectTasks))
+
+        return response
     }
 
     fun getTask(taskId: UUID): ResponseGetTaskStatus {

@@ -2,6 +2,7 @@ package com.yooshyasha.backend.service
 
 import com.yooshyasha.backend.config.VikunjaConfig
 import com.yooshyasha.backend.dto.api.*
+import com.yooshyasha.backend.exceptions.ProjectNotFound
 import com.yooshyasha.backend.feign.VikunjaClient
 import dto.project.VikunjaProjectDTO
 import dto.project.VikunjaTaskDTO
@@ -65,6 +66,14 @@ class VikunjaService(
             VikunjaProjectDTO(
                 project.id, project.title, tasks = getProjectTasks(project.id)
             )
+        }
+    }
+
+    fun getProject(projectId: Int): VikunjaProjectDTO {
+        try {
+            return getProjects().first { it.id == projectId }
+        } catch (e: NoSuchElementException) {
+            throw ProjectNotFound()
         }
     }
 
