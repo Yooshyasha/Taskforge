@@ -21,7 +21,7 @@ export async function fetchProjects() {
 
 export async function startGeneration(text, projectId) {
   const body = projectId != null ? { text, projectId } : { text }
-  return request('/v1/api/generation/', {
+  return request('/v1/api/generation', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
