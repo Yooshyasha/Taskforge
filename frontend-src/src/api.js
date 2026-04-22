@@ -14,7 +14,7 @@ async function request(url, options = {}) {
 }
 
 export async function fetchProjects() {
-  const data = await request('/vikunja/projects')
+  const data = await request('/v1/api/vikunja/projects')
   // ResponseGetProjects wraps a list: { projects: [...] }
   return data.projects ?? data ?? []
 }
