@@ -27,6 +27,8 @@ class AIAgentConfig(
     @param:Value($$"${ai.model.id}") private val aiModelId: String,
     private val resourceLoader: ResourceLoader,
 ) {
+
+    // TODO поддержка всех провайдеров
     @Bean
     fun aiExecutor(): SingleLLMPromptExecutor {
         val baseClient = HttpClient(OkHttp) {
