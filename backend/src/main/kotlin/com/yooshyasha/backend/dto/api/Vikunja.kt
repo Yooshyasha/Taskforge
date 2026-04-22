@@ -28,6 +28,15 @@ data class TaskRequest(
     val description: String? = null,
 )
 
+data class TaskUpdateRequest(
+    val title: String? = null,
+    val description: String? = null,
+    val done: Boolean? = null,
+    val due_date: String? = null,
+    val priority: Int? = null,
+    val bucket_id: Int? = null,
+)
+
 data class TaskResponse(
     val id: Int,
     val title: String,

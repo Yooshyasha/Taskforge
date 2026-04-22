@@ -6,6 +6,7 @@ import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
@@ -65,4 +66,11 @@ interface VikunjaClient {
         @RequestHeader("Authorization") auth: String,
         @PathVariable projectId: Int,
     ): List<BucketResponse>
+
+    @PostMapping("/tasks/{taskId}", consumes = [MediaType.APPLICATION_JSON_VALUE])
+    fun updateTask(
+        @RequestHeader("Authorization") auth: String,
+        @PathVariable taskId: Int,
+        @RequestBody request: TaskUpdateRequest,
+    ): TaskResponse
 }
