@@ -83,10 +83,19 @@ class AIAgentConfig(
     }
 
     @Bean
-    fun systemPrompt(): String =
+    fun defaultSystemPrompt(): String =
         resourceLoader
             .getResource("classpath:default_system_prompt.txt")
             .inputStream
             .bufferedReader()
             .readText()
+
+    @Bean
+    fun editMarkSystemPrompt(): String =
+        resourceLoader
+            .getResource("classpath:edit_mark_system_prompt.txt")
+            .inputStream
+            .bufferedReader()
+            .readText()
+
 }

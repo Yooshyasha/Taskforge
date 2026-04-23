@@ -22,9 +22,10 @@ import org.springframework.stereotype.Component
 class TaskManagerAgentProvider(
     @param:Qualifier("aiExecutor") private val aiExecutor: SingleLLMPromptExecutor,
     private val llModel: LLModel,
-    private val systemPrompt: String,
+    private val defaultSystemPrompt: String,
+    private val editMarkSystemPrompt: String,
 ) : BaseAgentProvider<String, GeneratedTasksResponse> {
-    override fun provideAgent(): AIAgent<String, GeneratedTasksResponse> {
+    override fun provideAgent(systemPrompt: String): AIAgent<String, GeneratedTasksResponse> {
         val strategy = strategy<String, GeneratedTasksResponse>("task manager") {
             val originalKey = createStorageKey<String>("original")
             val generatedTasksKey = createStorageKey<GeneratedTasksResponse>("generated tasks response")
@@ -93,4 +94,7 @@ class TaskManagerAgentProvider(
             toolRegistry = ToolRegistry.EMPTY,
         )
     }
+
+    override fun provideAgent() = provideAgent(defaultSystemPrompt)
+    fun provideAgentWithEditMark() = provideAgent(editMarkSystemPrompt)
 }
