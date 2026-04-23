@@ -15,8 +15,13 @@ class AITaskGenerationService(
         logger.error("Exception process ai agent:", e)
     })
 
-    fun generation(text: String): Deferred<GeneratedTasksResponse> = scope.async {
-        return@async taskManagerAgentProvider.provideAgent().run(text)
+    fun generation(text: String, isEdit: Boolean): Deferred<GeneratedTasksResponse> = scope.async {
+        val agent = if (!isEdit) {
+            taskManagerAgentProvider.provideAgent()
+        } else {
+            taskManagerAgentProvider.provideAgentWithEditMark()
+        }
+        return@async agent.run(text)
     }
 
     suspend fun getTaskResult(task: Deferred<GeneratedTasksResponse>): GeneratedTasksResponse? {

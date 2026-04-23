@@ -30,7 +30,10 @@ class GenerationService(
         vikunjaProject?.let { llmRequest += vikunjaTasksToString(vikunjaProject) }
 
         val taskId = UUID.randomUUID()
-        val task = aiTaskGenerationService.generation(llmRequest)
+        val task = aiTaskGenerationService.generation(
+            llmRequest,
+            isEdit = vikunjaProject != null,
+        )
         futureStorage.save(taskId, task)
 
         return ResponsePostGenerate(taskId)
