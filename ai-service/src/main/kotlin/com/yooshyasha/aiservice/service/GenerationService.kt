@@ -39,6 +39,7 @@ class GenerationService(
         val task = aiTaskGenerationService.generation(
             llmRequest,
             isEdit = vikunjaProject != null,
+            taskId,
         )
         futureStorage.save(taskId, task)
 

@@ -13,12 +13,13 @@ import ai.koog.prompt.executor.llms.SingleLLMPromptExecutor
 import ai.koog.prompt.llm.LLModel
 import ai.koog.prompt.params.LLMParams
 import com.yooshyasha.aiservice.ai.base.BaseAgentProvider
-import com.yooshyasha.aiservice.ai.tools.UserInputToolSet
+import com.yooshyasha.aiservice.ai.tools.UserInputToolSetFactory
 import com.yooshyasha.aiservice.dto.ai.VerifyTasksResult
 import com.yooshyasha.aiservice.enum.VerifyStatus
 import dto.GeneratedTasksResponse
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Component
+import java.util.*
 
 @Component
 class TaskManagerAgentProvider(
@@ -26,9 +27,9 @@ class TaskManagerAgentProvider(
     private val llModel: LLModel,
     private val defaultSystemPrompt: String,
     private val editMarkSystemPrompt: String,
-    private val userInputToolSet: UserInputToolSet,
+    private val userInputToolSetFactory: UserInputToolSetFactory,
 ) : BaseAgentProvider<String, GeneratedTasksResponse> {
-    override fun provideAgent(systemPrompt: String): AIAgent<String, GeneratedTasksResponse> {
+    override fun provideAgent(systemPrompt: String, futureId: UUID): AIAgent<String, GeneratedTasksResponse> {
         val strategy = strategy<String, GeneratedTasksResponse>("task manager") {
             val originalKey = createStorageKey<String>("original")
             val generatedTasksKey = createStorageKey<GeneratedTasksResponse>("generated tasks response")
@@ -95,11 +96,11 @@ class TaskManagerAgentProvider(
                 maxAgentIterations = 12,
             ),
             toolRegistry = ToolRegistry {
-                tools(userInputToolSet)
+                tools(userInputToolSetFactory.UserInputToolSet(futureId))
             },
         )
     }
 
-    override fun provideAgent() = provideAgent(defaultSystemPrompt)
-    fun provideAgentWithEditMark() = provideAgent(editMarkSystemPrompt)
+    override fun provideAgent(futureId: UUID) = provideAgent(defaultSystemPrompt, futureId)
+    fun provideAgentWithEditMark(futureId: UUID) = provideAgent(editMarkSystemPrompt, futureId)
 }

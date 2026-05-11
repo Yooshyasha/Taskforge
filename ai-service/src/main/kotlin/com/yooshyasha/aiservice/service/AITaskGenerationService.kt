@@ -5,6 +5,7 @@ import dto.GeneratedTasksResponse
 import kotlinx.coroutines.*
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import java.util.UUID
 
 @Service
 class AITaskGenerationService(
@@ -15,11 +16,11 @@ class AITaskGenerationService(
         logger.error("Exception process ai agent:", e)
     })
 
-    fun generation(text: String, isEdit: Boolean): Deferred<GeneratedTasksResponse> = scope.async {
+    fun generation(text: String, isEdit: Boolean, futureId: UUID): Deferred<GeneratedTasksResponse> = scope.async {
         val agent = if (!isEdit) {
-            taskManagerAgentProvider.provideAgent()
+            taskManagerAgentProvider.provideAgent(futureId)
         } else {
-            taskManagerAgentProvider.provideAgentWithEditMark()
+            taskManagerAgentProvider.provideAgentWithEditMark(futureId)
         }
         return@async agent.run(text)
     }
