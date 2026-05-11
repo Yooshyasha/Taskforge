@@ -5,6 +5,8 @@ import com.yooshyasha.backend.dto.controller.RequestStartGenerate
 import com.yooshyasha.backend.dto.controller.ResponseConfirm
 import com.yooshyasha.backend.dto.controller.ResponseGenerate
 import com.yooshyasha.backend.service.GenerationService
+import dto.RequestSendAnswer
+import dto.ResponseGetTaskStatus
 import dto.ResponsePostGenerate
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -27,5 +29,10 @@ class GenerationController(
     @PostMapping("/{taskId}/confirm")
     fun confirm(@PathVariable taskId: UUID, @RequestBody data: RequestConfirmTasks): ResponseConfirm {
         return generationService.confirm(taskId, data)
+    }
+
+    @PostMapping("/answer")
+    suspend fun sendAnswer(@RequestBody data: RequestSendAnswer): ResponseGetTaskStatus {
+        return generationService.sendAnswer(data)
     }
 }
