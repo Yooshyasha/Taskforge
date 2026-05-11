@@ -6,7 +6,7 @@ import ai.koog.agents.core.agent.entity.createStorageKey
 import ai.koog.agents.core.dsl.builder.strategy
 import ai.koog.agents.core.dsl.extension.nodeLLMRequestStructured
 import ai.koog.agents.core.tools.ToolRegistry
-import ai.koog.agents.ext.agent.reActStrategy
+import ai.koog.agents.ext.agent.subgraphWithTask
 import ai.koog.prompt.dsl.prompt
 import ai.koog.prompt.executor.llms.SingleLLMPromptExecutor
 import ai.koog.prompt.llm.LLModel
@@ -33,13 +33,15 @@ class TaskManagerAgentProvider(
             val originalKey = createStorageKey<String>("original")
             val generatedTasksKey = createStorageKey<GeneratedTasksResponse>("generated tasks response")
 
-            val nodeVerifyInput =
-                reActStrategy(
-                    reasoningPrompt =
-                        "Определи, достаточно ли контекста для определения задач. Запроси уточнения " +
-                                "(обязательно с помощью инструмента) у пользователя по необходимости. " +
-                                "Итого ТЗ должно быть максимально понятно."
-                )
+            val nodeVerifyInput by subgraphWithTask<String, String>(
+                tools = ToolRegistry {
+                    tools(userInputToolSetFactory.UserInputToolSet(futureId))
+                }.tools,
+            ) { userInput ->
+                "Определи, достаточно ли контекста для определения задач. Запроси уточнения " +
+                        "(обязательно с помощью инструмента) у пользователя по необходимости. " +
+                        "Итого ТЗ должно быть максимально понятно.\nЗапрос пользователя: $userInput"
+            }
             val nodeGenerateTasks by nodeLLMRequestStructured<GeneratedTasksResponse>("generate")
             val nodeVerify by nodeLLMRequestStructured<VerifyTasksResult>("verify")
 
