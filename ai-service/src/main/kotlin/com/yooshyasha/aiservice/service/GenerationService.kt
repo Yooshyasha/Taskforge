@@ -85,16 +85,18 @@ class GenerationService(
     suspend fun sendAnswer(taskId: UUID, answer: String): ResponseGetTaskStatus {
         userAnswerStorage.submitAnswer(taskId, answer)
 
-        try {
+        return try {
             withTimeout(10.seconds) {
-                while (getTask(taskId).status == TaskStatus.QUESTION) {
+                var status: ResponseGetTaskStatus
+                do {
                     delay(1.seconds)
-                }
+                    status = getTask(taskId)
+                } while (status.status == TaskStatus.QUESTION)
+
+                status
             }
         } catch (e: TimeoutCancellationException) {
             throw ApiException("Статус не изменился по неизвестной причине", 500)
         }
-
-        return getTask(taskId)
     }
 }
