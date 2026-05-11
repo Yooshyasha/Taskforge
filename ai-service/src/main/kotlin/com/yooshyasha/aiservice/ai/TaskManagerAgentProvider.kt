@@ -5,7 +5,10 @@ import ai.koog.agents.core.agent.config.AIAgentConfig
 import ai.koog.agents.core.agent.entity.createStorageKey
 import ai.koog.agents.core.dsl.builder.forwardTo
 import ai.koog.agents.core.dsl.builder.strategy
+import ai.koog.agents.core.dsl.extension.nodeExecuteTool
 import ai.koog.agents.core.dsl.extension.nodeLLMRequestStructured
+import ai.koog.agents.core.dsl.extension.nodeLLMSendToolResult
+import ai.koog.agents.core.dsl.extension.onToolCall
 import ai.koog.agents.core.tools.ToolRegistry
 import ai.koog.agents.core.tools.reflect.tools
 import ai.koog.prompt.dsl.prompt
@@ -37,6 +40,11 @@ class TaskManagerAgentProvider(
             val nodeGenerateTasks by nodeLLMRequestStructured<GeneratedTasksResponse>("generate")
             val nodeVerify by nodeLLMRequestStructured<VerifyTasksResult>("verify")
 
+            val executeTool by nodeExecuteTool("execute tool")
+            val sendToolResult by nodeLLMSendToolResult("send tool result")
+
+            edge(executeTool forwardTo sendToolResult)
+
             edge(nodeStart forwardTo nodeGenerateTasks transformed {
                 storage.set(originalKey, it)
                 """
@@ -47,6 +55,20 @@ class TaskManagerAgentProvider(
                     none
                 """.trimMargin()
             })
+
+            edge(sendToolResult forwardTo nodeGenerateTasks transformed {
+                val original = storage.get(originalKey)!!
+
+                """
+                    MODE: GENERATE
+                    ORIGINAL:
+                    $original
+                    REFINEMENT:
+                    tool result: ${it.content}
+                """.trimMargin()
+            })
+
+            edge(nodeGenerateTasks forwardTo executeTool onToolCall { true })
             edge(nodeGenerateTasks forwardTo nodeVerify transformed {
                 it
                     .onSuccess { response -> storage.set(generatedTasksKey, response.data) }
@@ -62,6 +84,7 @@ class TaskManagerAgentProvider(
                 """.trimIndent()
             })
 
+            edge(nodeVerify forwardTo executeTool onToolCall { true })
             edge(nodeVerify forwardTo nodeGenerateTasks onCondition {
                 it.onFailure { throw Exception("structure failed") }
 
