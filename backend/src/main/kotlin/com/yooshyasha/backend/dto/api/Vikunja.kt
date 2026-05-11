@@ -1,5 +1,7 @@
 package com.yooshyasha.backend.dto.api
 
+import com.fasterxml.jackson.annotation.JsonInclude
+
 data class ProjectRequest(
     val title: String,
     val description: String? = null,
@@ -39,6 +41,7 @@ data class TaskRequest(
     val description: String? = null,
 )
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 data class TaskUpdateRequest(
     val title: String? = null,
     val description: String? = null,
