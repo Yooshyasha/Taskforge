@@ -9,9 +9,14 @@ import dto.ResponseGetTaskStatus
 import dto.ResponsePostGenerate
 import dto.project.VikunjaProjectDTO
 import enum.TaskStatus
+import exceptions.ApiException
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withTimeout
 import org.springframework.stereotype.Service
 import java.util.*
+import kotlin.time.Duration.Companion.seconds
 
 @Service
 class GenerationService(
@@ -79,6 +84,16 @@ class GenerationService(
 
     suspend fun sendAnswer(taskId: UUID, answer: String): ResponseGetTaskStatus {
         userAnswerStorage.submitAnswer(taskId, answer)
+
+        try {
+            withTimeout(10.seconds) {
+                while (getTask(taskId).status == TaskStatus.QUESTION) {
+                    delay(1.seconds)
+                }
+            }
+        } catch (e: TimeoutCancellationException) {
+            throw ApiException("Статус не изменился по неизвестной причине", 500)
+        }
 
         return getTask(taskId)
     }
