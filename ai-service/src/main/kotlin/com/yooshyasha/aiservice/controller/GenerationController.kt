@@ -2,6 +2,7 @@ package com.yooshyasha.aiservice.controller
 
 import com.yooshyasha.aiservice.service.GenerationService
 import dto.GenerateRequest
+import dto.RequestSendAnswer
 import dto.ResponseGetTaskStatus
 import dto.ResponsePostGenerate
 import org.springframework.web.bind.annotation.*
@@ -20,5 +21,10 @@ class GenerationController(
     @GetMapping("/{taskId}")
     suspend fun getTask(@PathVariable taskId: UUID): ResponseGetTaskStatus {
         return generationService.getTask(taskId)
+    }
+
+    @PostMapping("/answer")
+    suspend fun sendAnswer(@RequestBody data: RequestSendAnswer): ResponseGetTaskStatus {
+        return generationService.sendAnswer(data.taskId, data.answer)
     }
 }

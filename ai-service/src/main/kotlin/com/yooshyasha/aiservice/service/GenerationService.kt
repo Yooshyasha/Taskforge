@@ -3,6 +3,7 @@ package com.yooshyasha.aiservice.service
 import com.yooshyasha.aiservice.storage.AIQuestionStorage
 import com.yooshyasha.aiservice.storage.FutureStatusStorage
 import com.yooshyasha.aiservice.storage.FutureStorage
+import com.yooshyasha.aiservice.storage.UserAnswerStorage
 import dto.GeneratedTasksResponse
 import dto.ResponseGetTaskStatus
 import dto.ResponsePostGenerate
@@ -18,6 +19,7 @@ class GenerationService(
     private val futureStorage: FutureStorage,
     private val futureStatusStorage: FutureStatusStorage,
     private val aiQuestionStorage: AIQuestionStorage,
+    private val userAnswerStorage: UserAnswerStorage,
 ) {
     private fun vikunjaTasksToString(vikunjaProject: VikunjaProjectDTO): String {
         var result = "\n\nEDIT PROJECT. TASKS:"
@@ -70,5 +72,11 @@ class GenerationService(
                 ResponseGetTaskStatus(TaskStatus.COMPLETE, response)
             }
         }
+    }
+
+    suspend fun sendAnswer(taskId: UUID, answer: String): ResponseGetTaskStatus {
+        userAnswerStorage.submitAnswer(taskId, answer)
+
+        return getTask(taskId)
     }
 }
