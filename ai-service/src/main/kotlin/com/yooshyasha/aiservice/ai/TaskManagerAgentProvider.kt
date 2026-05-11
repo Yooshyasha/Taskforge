@@ -64,7 +64,7 @@ class TaskManagerAgentProvider(
                     ORIGINAL:
                     $original
                     REFINEMENT:
-                    tool result: ${it.content}
+                    none
                 """.trimMargin()
             })
 
