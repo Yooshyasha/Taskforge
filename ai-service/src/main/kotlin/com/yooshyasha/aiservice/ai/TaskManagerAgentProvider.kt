@@ -7,11 +7,13 @@ import ai.koog.agents.core.dsl.builder.forwardTo
 import ai.koog.agents.core.dsl.builder.strategy
 import ai.koog.agents.core.dsl.extension.nodeLLMRequestStructured
 import ai.koog.agents.core.tools.ToolRegistry
+import ai.koog.agents.core.tools.reflect.tools
 import ai.koog.prompt.dsl.prompt
 import ai.koog.prompt.executor.llms.SingleLLMPromptExecutor
 import ai.koog.prompt.llm.LLModel
 import ai.koog.prompt.params.LLMParams
 import com.yooshyasha.aiservice.ai.base.BaseAgentProvider
+import com.yooshyasha.aiservice.ai.tools.UserInputToolSet
 import com.yooshyasha.aiservice.dto.ai.VerifyTasksResult
 import com.yooshyasha.aiservice.enum.VerifyStatus
 import dto.GeneratedTasksResponse
@@ -24,6 +26,7 @@ class TaskManagerAgentProvider(
     private val llModel: LLModel,
     private val defaultSystemPrompt: String,
     private val editMarkSystemPrompt: String,
+    private val userInputToolSet: UserInputToolSet,
 ) : BaseAgentProvider<String, GeneratedTasksResponse> {
     override fun provideAgent(systemPrompt: String): AIAgent<String, GeneratedTasksResponse> {
         val strategy = strategy<String, GeneratedTasksResponse>("task manager") {
@@ -91,7 +94,9 @@ class TaskManagerAgentProvider(
                 model = llModel,
                 maxAgentIterations = 12,
             ),
-            toolRegistry = ToolRegistry.EMPTY,
+            toolRegistry = ToolRegistry {
+                tools(userInputToolSet)
+            },
         )
     }
 
