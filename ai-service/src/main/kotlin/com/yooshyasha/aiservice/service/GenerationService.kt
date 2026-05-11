@@ -17,7 +17,7 @@ class GenerationService(
     private val aiTaskGenerationService: AITaskGenerationService,
     private val futureStorage: FutureStorage,
     private val futureStatusStorage: FutureStatusStorage,
-    private val aIQuestionStorage: AIQuestionStorage,
+    private val aiQuestionStorage: AIQuestionStorage,
 ) {
     private fun vikunjaTasksToString(vikunjaProject: VikunjaProjectDTO): String {
         var result = "\n\nEDIT PROJECT. TASKS:"
@@ -58,7 +58,7 @@ class GenerationService(
         return when (response) {
             null -> {
                 if (futureStatus == TaskStatus.QUESTION) {
-                    val question = aIQuestionStorage.getQuestion(taskId)
+                    val question = aiQuestionStorage.getQuestion(taskId)
                     ResponseGetTaskStatus(TaskStatus.QUESTION, null, message = question)
                 } else {
                     ResponseGetTaskStatus(TaskStatus.ACTIVE, null)
