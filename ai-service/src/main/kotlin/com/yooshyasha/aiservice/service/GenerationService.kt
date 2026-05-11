@@ -1,5 +1,7 @@
 package com.yooshyasha.aiservice.service
 
+import com.yooshyasha.aiservice.storage.AIQuestionStorage
+import com.yooshyasha.aiservice.storage.FutureStatusStorage
 import com.yooshyasha.aiservice.storage.FutureStorage
 import dto.GeneratedTasksResponse
 import dto.ResponseGetTaskStatus
@@ -14,6 +16,8 @@ import java.util.*
 class GenerationService(
     private val aiTaskGenerationService: AITaskGenerationService,
     private val futureStorage: FutureStorage,
+    private val futureStatusStorage: FutureStatusStorage,
+    private val aIQuestionStorage: AIQuestionStorage,
 ) {
     private fun vikunjaTasksToString(vikunjaProject: VikunjaProjectDTO): String {
         var result = "\n\nEDIT PROJECT. TASKS:"
@@ -41,6 +45,8 @@ class GenerationService(
 
     suspend fun getTask(taskId: UUID): ResponseGetTaskStatus {
         val task: Deferred<GeneratedTasksResponse> = futureStorage.getTask(taskId)
+        val futureStatus = futureStatusStorage.getStatus(taskId)
+
         val response: GeneratedTasksResponse?
         try {
             response = aiTaskGenerationService.getTaskResult(task)
@@ -49,9 +55,15 @@ class GenerationService(
             return ResponseGetTaskStatus(TaskStatus.FAILED, null)
         }
 
-
         return when (response) {
-            null -> ResponseGetTaskStatus(TaskStatus.ACTIVE, null)
+            null -> {
+                if (futureStatus == TaskStatus.QUESTION) {
+                    val question = aIQuestionStorage.getQuestion(taskId)
+                    ResponseGetTaskStatus(TaskStatus.QUESTION, null, message = question)
+                } else {
+                    ResponseGetTaskStatus(TaskStatus.ACTIVE, null)
+                }
+            }
 
             else -> {
                 futureStorage.remove(taskId)
