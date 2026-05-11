@@ -7,13 +7,11 @@ import com.yooshyasha.backend.dto.controller.ResponseConfirm
 import com.yooshyasha.backend.dto.controller.ResponseGenerate
 import com.yooshyasha.backend.dto.entity.InProcessDTO
 import com.yooshyasha.backend.exceptions.GeneratedTasksNotFound
+import com.yooshyasha.backend.exceptions.InvalidStateForSendAnswer
 import com.yooshyasha.backend.feign.AiServiceFeignClient
 import com.yooshyasha.backend.storage.GeneratedTasksStorage
 import com.yooshyasha.backend.storage.InProcessStorage
-import dto.GenerateRequest
-import dto.GeneratedTasksResponse
-import dto.ResponseGetTaskStatus
-import dto.ResponsePostGenerate
+import dto.*
 import dto.project.VikunjaTaskDTO
 import enum.TaskControl
 import enum.TaskStatus
@@ -155,5 +153,13 @@ class GenerationService(
         generatedTasksStorage.remove(taskId)
         inProcessStorage.delete(taskId)
         return ResponseConfirm(success, creationData)
+    }
+
+    fun sendAnswer(data: RequestSendAnswer): ResponseGetTaskStatus {
+        val generate = getTask(data.taskId)
+
+        if (generate.status != TaskStatus.QUESTION) throw InvalidStateForSendAnswer()
+
+        return aiServiceFeignClient.sendAnswer(data)
     }
 }

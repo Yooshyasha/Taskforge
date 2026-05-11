@@ -7,3 +7,5 @@ class GeneratedTasksNotFound : ApiException("Generated tasks not found", 404)
 class TasksZipFailed : ApiException("Tasks zip failed", 400)
 
 class ProjectNotFound : ApiException("Project not found", 404)
+
+class InvalidStateForSendAnswer : ApiException("Invalid state for send answer", 409)

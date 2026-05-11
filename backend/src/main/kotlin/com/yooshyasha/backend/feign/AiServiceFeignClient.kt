@@ -1,6 +1,7 @@
 package com.yooshyasha.backend.feign
 
 import dto.GenerateRequest
+import dto.RequestSendAnswer
 import dto.ResponseGetTaskStatus
 import dto.ResponsePostGenerate
 import org.springframework.cloud.openfeign.FeignClient
@@ -17,4 +18,7 @@ interface AiServiceFeignClient {
 
     @GetMapping("/v1/api/generation/{taskId}")
     fun getTask(@PathVariable taskId: UUID): ResponseGetTaskStatus
+
+    @PostMapping("/v1/api/generation/answer")
+    fun sendAnswer(@RequestBody data: RequestSendAnswer): ResponseGetTaskStatus
 }
