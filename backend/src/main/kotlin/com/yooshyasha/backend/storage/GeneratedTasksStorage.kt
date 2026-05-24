@@ -37,7 +37,11 @@ class GeneratedTasksStorage {
         pairs.onEach { pair ->
             when (pair.second.status) {
                 ConfirmedTaskStatus.APPROVE -> result.add(pair.first)
-                ConfirmedTaskStatus.UPDATE -> result.add(pair.second.taskDTO!!)
+                ConfirmedTaskStatus.UPDATE -> result.add(pair.second.taskDTO!!.apply {
+                    if (this.description.isBlank()) {
+                        this.description = pair.first.description
+                    }
+                })
                 ConfirmedTaskStatus.DELETE -> {}
             }
         }
