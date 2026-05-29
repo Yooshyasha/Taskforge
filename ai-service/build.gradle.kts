@@ -21,7 +21,8 @@ repositories {
     mavenCentral()
 }
 
-val koogVersion = "0.8.0"
+val koogVersion = "1.0.0"
+val koogStarterVersion = "$koogVersion-beta-preview7"
 val ktorVersion = "3.4.0"
 
 configurations.all {
@@ -50,11 +51,11 @@ dependencies {
     implementation("jakarta.validation:jakarta.validation-api:3.1.1")
 
     implementation("ai.koog:koog-agents:$koogVersion")
-    implementation("ai.koog:koog-spring-boot-starter:$koogVersion")
+    implementation("ai.koog:koog-spring-boot-starter:$koogStarterVersion")
     implementation("io.ktor:ktor-client-okhttp-jvm:$ktorVersion")
 
     // Source: https://mvnrepository.com/artifact/org.apache.httpcomponents.client5/httpclient5
-    implementation("org.apache.httpcomponents.client5:httpclient5:5.6")
+    implementation("org.apache.httpcomponents.client5:httpclient5:5.6.1")
 
     implementation(kotlin("stdlib"))
 
