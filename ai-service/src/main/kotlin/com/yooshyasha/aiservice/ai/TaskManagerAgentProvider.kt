@@ -39,7 +39,7 @@ class TaskManagerAgentProvider(
                 }.tools,
                 assistantResponseRepeatMax = 12,
             ) { userInput ->
-                "Определи, достаточно ли контекста для определения задач. Запроси уточнени у пользователя с " +
+                "Определи, достаточно ли контекста для определения задач. Запроси уточнения у пользователя с " +
                         "помощью инструмента по необходимости. " +
                         "Итого ТЗ должно быть максимально понятно.\nЗапрос пользователя: $userInput"
             }
@@ -55,8 +55,6 @@ class TaskManagerAgentProvider(
             edge(nodeVerifyInput forwardTo nodeGenerateTasks transformed {
                 """
                     MODE: GENERATE
-                    REFINEMENT:
-                    none
                 """.trimMargin()
             })
 
@@ -64,14 +62,8 @@ class TaskManagerAgentProvider(
                 it
                     .onSuccess { response -> storage.set(generatedTasksKey, response.data) }
                     .onFailure { throw Exception("structure failed") }
-                val original = storage.get(originalKey)!!
-
                 """
                     MODE: VERIFY
-                    ORIGINAL:
-                    $original
-                    GENERATED:
-                    ${it.getOrNull()!!.data}
                 """.trimIndent()
             })
 
@@ -82,8 +74,6 @@ class TaskManagerAgentProvider(
             } transformed {
                 """
                     MODE: GENERATE
-                    REFINEMENT:
-                    ${it.getOrNull()!!.data.refinementInstruction}
                 """.trimIndent()
             })
             edge(nodeVerify forwardTo nodeFinish onCondition {
@@ -105,9 +95,7 @@ class TaskManagerAgentProvider(
                 model = llModel,
                 maxAgentIterations = 32,
             ),
-            toolRegistry = ToolRegistry {
-                tools(userInputToolSetFactory.UserInputToolSet(futureId))
-            },
+            toolRegistry = ToolRegistry.EMPTY,
         )
     }
 
