@@ -8,7 +8,7 @@ import ai.koog.agents.core.dsl.extension.nodeLLMRequestStructured
 import ai.koog.agents.core.tools.ToolRegistry
 import ai.koog.agents.ext.agent.subgraphWithTask
 import ai.koog.prompt.dsl.prompt
-import ai.koog.prompt.executor.llms.SingleLLMPromptExecutor
+import ai.koog.prompt.executor.llms.MultiLLMPromptExecutor
 import ai.koog.prompt.llm.LLModel
 import ai.koog.prompt.params.LLMParams
 import com.yooshyasha.aiservice.ai.base.BaseAgentProvider
@@ -22,7 +22,7 @@ import java.util.*
 
 @Component
 class TaskManagerAgentProvider(
-    @param:Qualifier("aiExecutor") private val aiExecutor: SingleLLMPromptExecutor,
+    @Qualifier("aiExecutor") private val aiExecutor: MultiLLMPromptExecutor,
     private val llModel: LLModel,
     private val defaultSystemPrompt: String,
     private val editMarkSystemPrompt: String,
