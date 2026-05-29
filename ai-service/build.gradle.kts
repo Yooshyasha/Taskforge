@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     kotlin("jvm")
     kotlin("plugin.spring")
@@ -72,4 +74,8 @@ kotlin {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+val compileKotlin: KotlinCompile by tasks
+compileKotlin.compilerOptions {
+    freeCompilerArgs.set(listOf("-Xannotation-default-target=param-property"))
 }
