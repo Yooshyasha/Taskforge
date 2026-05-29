@@ -1,8 +1,13 @@
 package com.yooshyasha.aiservice.ai
 
 import ai.koog.agents.core.agent.AIAgent
+import ai.koog.agents.core.agent.config.AIAgentConfig
+import ai.koog.agents.core.agent.functionalStrategy
+import ai.koog.agents.core.tools.ToolRegistry
+import ai.koog.prompt.dsl.prompt
 import ai.koog.prompt.executor.llms.MultiLLMPromptExecutor
 import ai.koog.prompt.llm.LLModel
+import ai.koog.prompt.params.LLMParams
 import com.yooshyasha.aiservice.ai.base.BaseAgentProvider
 import com.yooshyasha.aiservice.dto.ai.VerifyTasksResult
 import org.springframework.beans.factory.annotation.Qualifier
@@ -23,6 +28,23 @@ class TasksVerifyAgentProvider(
         systemPrompt: String,
         futureId: UUID
     ): AIAgent<String, VerifyTasksResult> {
-        // TODO
+        val strategy = functionalStrategy<String, VerifyTasksResult> { input ->
+            return@functionalStrategy requestLLMStructured<VerifyTasksResult>(
+                "MODE: VERIFY\n$input"
+            ).onFailure { throw Exception("structure failed") }.getOrNull()!!.data
+        }
+
+        return AIAgent(
+            promptExecutor = aiExecutor,
+            strategy = strategy,
+            agentConfig = AIAgentConfig(
+                prompt = prompt("verify agent", params = LLMParams(maxTokens = 64_000)) {
+                    system(systemPrompt)
+                },
+                model = llModel,
+                maxAgentIterations = 32,
+            ),
+            toolRegistry = ToolRegistry.EMPTY,
+        )
     }
 }

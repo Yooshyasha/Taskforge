@@ -3,6 +3,7 @@ package com.yooshyasha.aiservice.ai
 import ai.koog.agents.core.agent.AIAgent
 import ai.koog.agents.core.agent.config.AIAgentConfig
 import ai.koog.agents.core.agent.entity.createStorageKey
+import ai.koog.agents.core.dsl.builder.node
 import ai.koog.agents.core.dsl.builder.strategy
 import ai.koog.agents.core.dsl.extension.nodeLLMRequestStructured
 import ai.koog.agents.core.tools.ToolRegistry
@@ -27,6 +28,7 @@ class TaskManagerAgentProvider(
     private val defaultSystemPrompt: String,
     private val editMarkSystemPrompt: String,
     private val userInputToolSetFactory: UserInputToolSetFactory,
+    private val tasksVerifyAgentProvider: TasksVerifyAgentProvider,
 ) : BaseAgentProvider<String, GeneratedTasksResponse> {
     override fun provideAgent(systemPrompt: String, futureId: UUID): AIAgent<String, GeneratedTasksResponse> {
         val strategy = strategy<String, GeneratedTasksResponse>("task manager") {
@@ -44,8 +46,18 @@ class TaskManagerAgentProvider(
                         "Итого ТЗ должно быть максимально понятно.\nЗапрос пользователя: $userInput"
             }
             val nodeGenerateTasks by nodeLLMRequestStructured<GeneratedTasksResponse>("generate")
-            val nodeVerify by nodeLLMRequestStructured<VerifyTasksResult>("verify")
+            val nodeVerify by node<String, VerifyTasksResult>("verify") { input ->
+                val original = storage.get(originalKey)
 
+                tasksVerifyAgentProvider.provideAgent(futureId).run(
+                    """
+                        GENERATED TASKS:
+                        $input
+                        ORIGINAL:
+                        $original
+                    """.trimIndent()
+                )
+            }
 
             edge(nodeStart forwardTo nodeVerifyInput transformed {
                 storage.set(originalKey, it)
@@ -62,24 +74,21 @@ class TaskManagerAgentProvider(
                 it
                     .onSuccess { response -> storage.set(generatedTasksKey, response.data) }
                     .onFailure { throw Exception("structure failed") }
-                """
-                    MODE: VERIFY
-                """.trimIndent()
+
+                it.getOrNull()!!.data.toString()
             })
 
             edge(nodeVerify forwardTo nodeGenerateTasks onCondition {
-                it.onFailure { throw Exception("structure failed") }
-
-                it.getOrNull()!!.data.status == VerifyStatus.FAIL
+                it.status == VerifyStatus.FAIL
             } transformed {
                 """
                     MODE: GENERATE
+                    REFINEMENT:
+                    ${it.refinementInstruction}
                 """.trimIndent()
             })
             edge(nodeVerify forwardTo nodeFinish onCondition {
-                it.onFailure { throw Exception("structure failed") }
-
-                it.getOrNull()!!.data.status == VerifyStatus.OK
+                it.status == VerifyStatus.OK
             } transformed {
                 storage.get(generatedTasksKey)!!
             })
