@@ -20,7 +20,7 @@ import kotlin.time.Duration.Companion.seconds
 @Component
 class ModelResolver(
     @Qualifier("aiExecutor") private val aiExecutor: MultiLLMPromptExecutor,
-    @Value($$"${app.ai.model-id}") private val aiModelId: String,
+    @Value($$"${ai.model-id}") private val aiModelId: String,
 ) {
     private val cached = AtomicReference<LLModel?>(null)
 
