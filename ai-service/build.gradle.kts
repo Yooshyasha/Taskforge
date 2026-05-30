@@ -25,6 +25,7 @@ repositories {
 
 val koogVersion = "1.0.0"
 val koogStarterVersion = "$koogVersion-beta-preview7"
+val ktorVersion = "3.4.0"
 
 configurations.all {
     exclude(group = "io.ktor", module = "ktor-client-apache5")
@@ -46,6 +47,7 @@ dependencies {
 
     implementation("ai.koog:koog-agents:$koogVersion")
     implementation("ai.koog:koog-spring-boot-starter:$koogStarterVersion")
+    implementation("io.ktor:ktor-client-okhttp-jvm:$ktorVersion")
 
     implementation(kotlin("stdlib"))
 
