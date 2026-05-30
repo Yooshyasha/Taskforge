@@ -1,4 +1,4 @@
-# Task Manager
+# Taskforge
 
 > Manage your tasks with AI.
 

@@ -16,7 +16,7 @@ export function Header({ projectName, onBack, onClearData }) {
 
   return (
     <header className="header">
-      <span className="header__logo">task-gen</span>
+      <span className="header__logo">taskforge</span>
 
       {projectName && (
         <>
