@@ -42,7 +42,7 @@ class TaskManagerAgentProvider(
                 assistantResponseRepeatMax = 12,
             ) { userInput ->
                 "Определи, достаточно ли контекста для определения задач. Запроси уточнения у пользователя с " +
-                        "помощью инструмента по необходимости. " +
+                        "помощью инструмента по необходимости (если ты не вызовешь инструмент, пользователь не увидит сообщение). " +
                         "Итого ТЗ должно быть максимально понятно.\nЗапрос пользователя: $userInput"
             }
             val nodeGenerateTasks by nodeLLMRequestStructured<GeneratedTasksResponse>("generate")
