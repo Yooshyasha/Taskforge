@@ -10,7 +10,6 @@ import ai.koog.agents.core.tools.ToolRegistry
 import ai.koog.agents.ext.agent.subgraphWithTask
 import ai.koog.prompt.dsl.prompt
 import ai.koog.prompt.executor.llms.MultiLLMPromptExecutor
-import ai.koog.prompt.llm.LLModel
 import ai.koog.prompt.params.LLMParams
 import com.yooshyasha.aiservice.ai.base.BaseAgentProvider
 import com.yooshyasha.aiservice.ai.tools.UserInputToolSetFactory

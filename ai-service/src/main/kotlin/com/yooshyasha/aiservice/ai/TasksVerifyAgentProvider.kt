@@ -6,7 +6,6 @@ import ai.koog.agents.core.agent.functionalStrategy
 import ai.koog.agents.core.tools.ToolRegistry
 import ai.koog.prompt.dsl.prompt
 import ai.koog.prompt.executor.llms.MultiLLMPromptExecutor
-import ai.koog.prompt.llm.LLModel
 import ai.koog.prompt.params.LLMParams
 import com.yooshyasha.aiservice.ai.base.BaseAgentProvider
 import com.yooshyasha.aiservice.dto.ai.VerifyTasksResult

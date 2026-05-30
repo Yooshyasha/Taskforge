@@ -1,6 +1,5 @@
 package com.yooshyasha.aiservice.ai
 
-import ai.koog.prompt.executor.clients.LLModelDefinitions
 import ai.koog.prompt.executor.clients.anthropic.AnthropicModels
 import ai.koog.prompt.executor.clients.bedrock.BedrockModels
 import ai.koog.prompt.executor.clients.deepseek.DeepSeekModels
