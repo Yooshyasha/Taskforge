@@ -532,6 +532,7 @@ body {
 .input-panel__body {
   flex: 1;
   overflow-y: auto;
+  overflow-anchor: none;
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -814,6 +815,7 @@ body {
 .ai-dialog__history {
   flex: 1;
   overflow-y: auto;
+  overflow-anchor: none; /* prevent scroll jump when answer textarea auto-resizes */
   display: flex;
   flex-direction: column;
   gap: 12px;
