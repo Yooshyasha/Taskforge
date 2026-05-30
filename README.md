@@ -4,6 +4,10 @@
 
 Create and edit [Vikunja](https://vikunja.io/) projects quickly and effortlessly with the help of AI. Describe what you want in plain language — the AI breaks it down into tasks, asks clarifying questions when needed, and lets you review every change before it's applied.
 
+### Homepage
+
+![Homepage](docs/media/home_page.png)
+
 ## Features
 
 - **Create and edit projects** — start a new project or modify an existing one.
@@ -70,7 +74,3 @@ Here's what a typical project-creation flow looks like.
 ![Viewing the project in Vikunja](docs/media/view_the_project.png)
 
 Editing an existing project follows the same flow.
-
-### Homepage
-
-![Homepage](docs/media/home_page.png)
