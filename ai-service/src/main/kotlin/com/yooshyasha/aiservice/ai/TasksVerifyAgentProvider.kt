@@ -17,14 +17,14 @@ import java.util.*
 @Component
 class TasksVerifyAgentProvider(
     @Qualifier("aiExecutor") private val aiExecutor: MultiLLMPromptExecutor,
-    private val llModel: LLModel,
     private val verifySystemPrompt: String,
+    private val modelResolver: ModelResolver,
 ) : BaseAgentProvider<String, VerifyTasksResult> {
-    override fun provideAgent(futureId: UUID): AIAgent<String, VerifyTasksResult> {
+    override suspend fun provideAgent(futureId: UUID): AIAgent<String, VerifyTasksResult> {
         return provideAgent(verifySystemPrompt, futureId)
     }
 
-    override fun provideAgent(
+    override suspend fun provideAgent(
         systemPrompt: String,
         futureId: UUID
     ): AIAgent<String, VerifyTasksResult> {
@@ -41,7 +41,7 @@ class TasksVerifyAgentProvider(
                 prompt = prompt("verify agent", params = LLMParams(maxTokens = 64_000)) {
                     system(systemPrompt)
                 },
-                model = llModel,
+                model = modelResolver.resolve(),
                 maxAgentIterations = 32,
             ),
             toolRegistry = ToolRegistry.EMPTY,

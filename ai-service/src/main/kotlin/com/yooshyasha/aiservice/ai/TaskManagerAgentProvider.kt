@@ -24,13 +24,13 @@ import java.util.*
 @Component
 class TaskManagerAgentProvider(
     @Qualifier("aiExecutor") private val aiExecutor: MultiLLMPromptExecutor,
-    private val llModel: LLModel,
     private val defaultSystemPrompt: String,
     private val editMarkSystemPrompt: String,
     private val userInputToolSetFactory: UserInputToolSetFactory,
     private val tasksVerifyAgentProvider: TasksVerifyAgentProvider,
+    private val modelResolver: ModelResolver,
 ) : BaseAgentProvider<String, GeneratedTasksResponse> {
-    override fun provideAgent(systemPrompt: String, futureId: UUID): AIAgent<String, GeneratedTasksResponse> {
+    override suspend fun provideAgent(systemPrompt: String, futureId: UUID): AIAgent<String, GeneratedTasksResponse> {
         val strategy = strategy<String, GeneratedTasksResponse>("task manager") {
             val originalKey = createStorageKey<String>("original")
             val clarificationsKey = createStorageKey<String>("clarifications")
@@ -107,13 +107,14 @@ class TaskManagerAgentProvider(
                 prompt = prompt("task manager agent prompt", params = LLMParams(maxTokens = 64_000)) {
                     system(systemPrompt)
                 },
-                model = llModel,
+                model = modelResolver.resolve(),
                 maxAgentIterations = 32,
             ),
             toolRegistry = ToolRegistry.EMPTY,
         )
     }
 
-    override fun provideAgent(futureId: UUID) = provideAgent(defaultSystemPrompt, futureId)
-    fun provideAgentWithEditMark(futureId: UUID) = provideAgent(defaultSystemPrompt + editMarkSystemPrompt, futureId)
+    override suspend fun provideAgent(futureId: UUID) = provideAgent(defaultSystemPrompt, futureId)
+    suspend fun provideAgentWithEditMark(futureId: UUID) =
+        provideAgent(defaultSystemPrompt + editMarkSystemPrompt, futureId)
 }
