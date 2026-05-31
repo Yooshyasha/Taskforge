@@ -1,8 +1,8 @@
-# Taskforge
+# Trof
 
-> Manage your tasks with AI.
+> AI task generation for [Vikunja](https://vikunja.io/) — it intercepts bad tasks before they hit your board. Describe a project in plain language and let AI break it down into structured Vikunja tasks. It asks clarifying questions when needed, and **nothing is written to your tracker until you review and confirm every change.**
 
-Create and edit [Vikunja](https://vikunja.io/) projects quickly and effortlessly with the help of AI. Describe what you want in plain language — the AI breaks it down into tasks, asks clarifying questions when needed, and lets you review every change before it's applied.
+> **Why "Trof"?** Named after the [Trophy](https://en.wikipedia.org/wiki/Trophy_(countermeasure)) active protection system on the Merkava tank, which intercepts incoming threats before they reach the hull. Trof does the same for your task board: the AI proposes, but every task passes through your review before it ever lands in Vikunja so nothing gets in that you didn't approve.
 
 ### Homepage
 
@@ -51,7 +51,7 @@ Create and edit [Vikunja](https://vikunja.io/) projects quickly and effortlessly
    ./gradlew build -x test && docker compose up -d
    ```
 
-6. Done! Task Manager is now running on your machine at **https://localhost**.
+6. Done! Trof is now running on your machine at **https://localhost**.
 
 ## Example
 

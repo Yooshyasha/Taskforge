@@ -181,7 +181,7 @@ export function App() {
         if (last?.role === 'ai' && last?.text === q) return prev
         return [...prev, { role: 'ai', text: q }]
       })
-      notify('Taskforge', 'AI has a question for you')
+      notify('Trof', 'AI has a question for you')
       return false
     }
 
@@ -205,7 +205,7 @@ export function App() {
       setConfirmed(false)
       setGenStatus('complete')
       addToast('tasks generated!', 'ok')
-      notify('Taskforge', 'Tasks generated!')
+      notify('Trof', 'Tasks generated!')
       return false
     }
 
