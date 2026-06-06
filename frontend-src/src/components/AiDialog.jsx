@@ -35,8 +35,14 @@ export function AiDialog({ dialog, onSend, canSend, thinking }) {
   useEffect(() => {
     const el = textareaRef.current
     if (!el) return
+    // Resizing the textarea changes the history's available height, which can
+    // shift its scroll position. Preserve the history scroll so typing never
+    // jerks the chat.
+    const history = historyRef.current
+    const prevScrollTop = history ? history.scrollTop : 0
     el.style.height = 'auto'
     el.style.height = Math.min(el.scrollHeight, 160) + 'px'
+    if (history) history.scrollTop = prevScrollTop
   }, [answerText])
 
   const handleSend = useCallback(() => {

@@ -174,7 +174,7 @@ export function InputPanel({
         <div className="input-panel__footer">
           {hasDialog && !isBusy ? (
             <button className="btn btn--ghost" onClick={onEditBrief}>
-              ↻ изменить бриф
+              ↻ edit brief
             </button>
           ) : (
             <>
