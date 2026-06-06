@@ -25,13 +25,15 @@ class AITaskGenerationService(
         language: ISO_639_1_Code,
         taskDepth: TaskDepth
     ): Deferred<GeneratedTasksResponse> = scope.async {
-        val inputText = "$text\n\nUSER LANGUAGE: ${language.nameRecord()}"
+        val inputText = "$text\n\n" +
+                "USER LANGUAGE: ${language.nameRecord()}\n" +
+                "TASKS DEPTH: ${taskDepth.name}"
         val agent = if (!isEdit) {
             taskManagerAgentProvider.provideAgent(futureId)
         } else {
             taskManagerAgentProvider.provideAgentWithEditMark(futureId)
         }
-        return@async agent.run(text)
+        return@async agent.run(inputText)
     }
 
     suspend fun getTaskResult(task: Deferred<GeneratedTasksResponse>): GeneratedTasksResponse? {
