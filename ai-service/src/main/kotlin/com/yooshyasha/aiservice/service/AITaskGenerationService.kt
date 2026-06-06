@@ -25,7 +25,7 @@ class AITaskGenerationService(
         language: ISO_639_1_Code,
         taskDepth: TaskDepth
     ): Deferred<GeneratedTasksResponse> = scope.async {
-        val inputText = "$text\n\nUSER LANGUAGE: "
+        val inputText = "$text\n\nUSER LANGUAGE: ${language.nameRecord()}"
         val agent = if (!isEdit) {
             taskManagerAgentProvider.provideAgent(futureId)
         } else {
