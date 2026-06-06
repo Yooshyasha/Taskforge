@@ -17,6 +17,7 @@ export function Header({ projectName, onBack, onClearData }) {
   return (
     <header className="header">
       <span className="header__logo">trof</span>
+      <span className="header__version">v1.1.0</span>
 
       {projectName && (
         <>

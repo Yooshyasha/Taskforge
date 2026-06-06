@@ -1,12 +1,29 @@
 import { useRef, useEffect } from 'react'
 import { AiDialog } from './AiDialog'
 
+const LANGUAGES = [
+  { value: 'en', label: 'English' },
+  { value: 'ru', label: 'Русский' },
+  { value: 'de', label: 'Deutsch' },
+  { value: 'fr', label: 'Français' },
+  { value: 'es', label: 'Español' },
+]
+
+const TASK_DEPTHS = [
+  { value: 'VERTICAL_SINCE', label: 'vertical' },
+  { value: 'GRAIN',          label: 'grain' },
+]
+
 export function InputPanel({
   collapsed,
   onToggleCollapse,
   project,
   inputText,
   onInputChange,
+  language,
+  onLanguageChange,
+  taskDepth,
+  onTaskDepthChange,
   onGenerate,
   genStatus,
   elapsed,
@@ -160,19 +177,47 @@ export function InputPanel({
               ↻ изменить бриф
             </button>
           ) : (
-            <button
-              className="btn btn--primary"
-              onClick={onGenerate}
-              disabled={isBusy || !inputText.trim()}
-            >
-              {isGenerating
-                ? '⟳ generating...'
-                : isQuestion
-                ? '⟳ waiting...'
-                : isComplete
-                ? 'regenerate'
-                : 'generate'}
-            </button>
+            <>
+              <button
+                className="btn btn--primary"
+                onClick={onGenerate}
+                disabled={isBusy || !inputText.trim()}
+              >
+                {isGenerating
+                  ? '⟳ generating...'
+                  : isQuestion
+                  ? '⟳ waiting...'
+                  : isComplete
+                  ? 'regenerate'
+                  : 'generate'}
+              </button>
+
+              <label className="input-panel__select" title="language">
+                <span className="input-panel__select-icon">🌐</span>
+                <select
+                  value={language}
+                  onChange={e => onLanguageChange(e.target.value)}
+                  disabled={isBusy}
+                >
+                  {LANGUAGES.map(l => (
+                    <option key={l.value} value={l.value}>{l.label}</option>
+                  ))}
+                </select>
+              </label>
+
+              <label className="input-panel__select" title="task depth">
+                <span className="input-panel__select-icon">≣</span>
+                <select
+                  value={taskDepth}
+                  onChange={e => onTaskDepthChange(e.target.value)}
+                  disabled={isBusy}
+                >
+                  {TASK_DEPTHS.map(d => (
+                    <option key={d.value} value={d.value}>{d.label}</option>
+                  ))}
+                </select>
+              </label>
+            </>
           )}
         </div>
       </div>

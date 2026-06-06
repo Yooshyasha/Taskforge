@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 
 import { fetchProjects, startGeneration, pollGeneration, sendAnswer, confirmTasks } from './api'
-import { saveState, loadState, clearState, saveDraft, loadDraft } from './storage'
+import { saveState, loadState, clearState, saveDraft, loadDraft,
+         saveLanguage, loadLanguage, saveTaskDepth, loadTaskDepth } from './storage'
 import { useToasts } from './hooks/useToasts'
 
 import { Header }        from './components/Header'
@@ -31,6 +32,8 @@ export function App() {
 
   /* ── Input ── */
   const [inputText, setInputText] = useState('')
+  const [language, setLanguage]   = useState(() => loadLanguage() ?? 'en')
+  const [taskDepth, setTaskDepth] = useState(() => loadTaskDepth() ?? 'VERTICAL_SINCE')
 
   /* ── Generation ── */
   // genStatus: 'idle' | 'generating' | 'polling' | 'question' | 'complete' | 'failed'
@@ -251,7 +254,7 @@ export function App() {
     setProgress(0)
 
     try {
-      const data = await startGeneration(text, projectId)
+      const data = await startGeneration(text, projectId, language, taskDepth)
       setTaskId(data.taskId)
       setGenStatus('polling')
       startTimers()
@@ -404,6 +407,16 @@ export function App() {
     saveDraft(text)
   }
 
+  function handleLanguageChange(value) {
+    setLanguage(value)
+    saveLanguage(value)
+  }
+
+  function handleTaskDepthChange(value) {
+    setTaskDepth(value)
+    saveTaskDepth(value)
+  }
+
   /* ═══════════════ Derived ═══════════════ */
   const aiThinking =
     (genStatus === 'generating' || genStatus === 'polling') && dialog.length > 0
@@ -437,6 +450,10 @@ export function App() {
           onToggleCollapse={() => setInputCollapsed(c => !c)}
           inputText={inputText}
           onInputChange={handleInputChange}
+          language={language}
+          onLanguageChange={handleLanguageChange}
+          taskDepth={taskDepth}
+          onTaskDepthChange={handleTaskDepthChange}
           onGenerate={handleGenerate}
           genStatus={genStatus}
           elapsed={elapsed}

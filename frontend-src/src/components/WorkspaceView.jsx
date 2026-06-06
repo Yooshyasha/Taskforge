@@ -7,6 +7,10 @@ export function WorkspaceView({
   onToggleCollapse,
   inputText,
   onInputChange,
+  language,
+  onLanguageChange,
+  taskDepth,
+  onTaskDepthChange,
   onGenerate,
   genStatus,
   elapsed,
@@ -37,6 +41,10 @@ export function WorkspaceView({
         project={selectedProject}
         inputText={inputText}
         onInputChange={onInputChange}
+        language={language}
+        onLanguageChange={onLanguageChange}
+        taskDepth={taskDepth}
+        onTaskDepthChange={onTaskDepthChange}
         onGenerate={onGenerate}
         genStatus={genStatus}
         elapsed={elapsed}

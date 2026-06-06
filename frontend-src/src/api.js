@@ -19,8 +19,9 @@ export async function fetchProjects() {
   return data.projects ?? data ?? []
 }
 
-export async function startGeneration(text, projectId) {
-  const body = projectId != null ? { text, projectId } : { text }
+export async function startGeneration(text, projectId, language, taskDepth) {
+  const body = { text, language, taskDepth }
+  if (projectId != null) body.projectId = projectId
   return request('/v1/api/generation', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

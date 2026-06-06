@@ -127,6 +127,14 @@ body {
   letter-spacing: -0.3px;
 }
 
+.header__version {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  align-self: flex-end;
+  margin-bottom: 2px;
+}
+
 .header__sep {
   color: var(--text-dim);
   font-size: 18px;
@@ -592,6 +600,49 @@ body {
   align-items: center;
   gap: 10px;
   background: var(--surface);
+}
+
+.input-panel__select {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 8px;
+  height: 32px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  transition: border-color .15s ease;
+}
+
+.input-panel__select:hover { border-color: var(--border-light); }
+.input-panel__select:focus-within { border-color: var(--border-focus); }
+
+.input-panel__select-icon {
+  font-size: 12px;
+  color: var(--text-dim);
+  line-height: 1;
+}
+
+.input-panel__select select {
+  appearance: none;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  cursor: pointer;
+  padding-right: 4px;
+}
+
+.input-panel__select select:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.input-panel__select select option {
+  background: var(--surface-2);
+  color: var(--text);
 }
 
 /* ── Question badge in top bar ── */

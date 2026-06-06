@@ -1,5 +1,7 @@
 const KEY = 'taskgen_v2'
 const DRAFT_KEY = 'taskgen_v2_draft'
+const LANGUAGE_KEY = 'taskgen_language'
+const TASK_DEPTH_KEY = 'taskgen_task_depth'
 
 export function saveState(state) {
   try {
@@ -33,5 +35,33 @@ export function loadDraft() {
     return localStorage.getItem(DRAFT_KEY) || ''
   } catch {
     return ''
+  }
+}
+
+export function saveLanguage(language) {
+  try {
+    localStorage.setItem(LANGUAGE_KEY, language)
+  } catch {}
+}
+
+export function loadLanguage() {
+  try {
+    return localStorage.getItem(LANGUAGE_KEY) || null
+  } catch {
+    return null
+  }
+}
+
+export function saveTaskDepth(taskDepth) {
+  try {
+    localStorage.setItem(TASK_DEPTH_KEY, taskDepth)
+  } catch {}
+}
+
+export function loadTaskDepth() {
+  try {
+    return localStorage.getItem(TASK_DEPTH_KEY) || null
+  } catch {
+    return null
   }
 }
